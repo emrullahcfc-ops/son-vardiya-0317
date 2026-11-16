@@ -5,6 +5,7 @@ var _prompt: Label
 var _subtitle: Label
 var _quest: Label
 var _fps: Label
+var _area: Label
 var _sub_timer: SceneTreeTimer
 var _player: Node
 
@@ -34,6 +35,9 @@ func _ready() -> void:
 	_fps = _make_label(root, Control.PRESET_TOP_RIGHT, 14)
 	_fps.position = Vector2(-90, 8)
 
+	_area = _make_label(root, Control.PRESET_CENTER_TOP, 18)
+	_area.position.y = 10
+	GameManager.area_entered.connect(_on_area)
 	AudioManager.subtitle.connect(_on_subtitle)
 	QuestManager.quest_started.connect(func(_i): _refresh_quest())
 	QuestManager.quest_completed.connect(func(_i): _refresh_quest())
@@ -61,6 +65,10 @@ func _process(_d: float) -> void:
 	var t: Node = _player.current_target if _player else null
 	_prompt.text = ("[E] " + t.get_prompt()) if (t and t.has_method("get_prompt")) else ""
 	_subtitle.add_theme_font_size_override("font_size", int(20 * float(GameManager.settings.get("subtitle_size", 1.0))))
+
+
+func _on_area(_id: String, area_name: String, _counted: bool) -> void:
+	_area.text = "%s  (%d/%d alan)" % [area_name, GameManager.visited_areas.size(), FactoryLayout.count_areas()]
 
 
 func _on_subtitle(text: String, duration: float) -> void:

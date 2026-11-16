@@ -34,10 +34,20 @@ A (6+ işçi, kayıtlar, yedek) · B (delil yetersiz, kaçış) · C (defteri im
 | 02 | FPS oyuncu | ✅ kod hazır, elle oynama testi bekliyor |
 | 03 | Etkileşim, kapı, belge | ✅ kod hazır, elle oynama testi bekliyor |
 | 04 | Envanter, görev, kayıt | ✅ otomatik testlerle doğrulandı |
-| 05 | Fabrika blokları (19 alan) | ⏳ |
+| 05 | Fabrika blokları (19 alan, 3 kat) | ✅ otomatik testlerle doğrulandı; elle oynama testi bekliyor |
 | 06 | Atmosfer, ses, korku olayları | ⏳ (HorrorDirector iskeleti var) |
 | 07+ | Bölümler 1–8, düşmanlar, finaller, cila, build | ⏳ |
 
 ## Ürün riskleri
 - Sanat ve ses üretimi: tüm modeller şu an geçici; Steam için sanatçı/varlık paketi gerekir.
 - 190 dk kapsam büyük; önce Bölüm 1–3 "dikey dilim" ile oyuncu testi yapılmalı.
+
+## Fabrika haritası (Aşama 5)
+Veri: `scripts/world/factory_layout.gd`. Üretici: `scripts/world/factory.gd`. Ana sahne: `scenes/world/factory.tscn`.
+- **Zemin (7):** Giriş, Güvenlik, Yükleme, A/B/C Hattı, Bakım. Dış alan oyuncunun başlangıcıdır.
+- **Üst kat (6):** Soyunma, Yemekhane, Revir, Personel Bürosu, Arşiv, Kamera Odası.
+- **Bodrum (6):** Boru, Pompa, Kontrol, Fan, Bakım Tüneli, Mühürlü Alan.
+- Merdivenler: batıda zemin↔üst, doğuda zemin↔bodrum (26,6° rampa).
+- Mühürlü Alan kapısı şimdilik kilitsiz; Bölüm 7'de kilitlenecek.
+- Test modu: **F2/F3** ile alanlar arasında ışınlanma, ekranda "(n/19 alan)" sayacı.
+- Şu an her şey gri kutu; sanat geçişi Aşama 20.

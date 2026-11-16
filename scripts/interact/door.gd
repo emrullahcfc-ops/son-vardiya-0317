@@ -10,12 +10,14 @@ extends Interactable
 @export var size: Vector3 = Vector3(1.0, 2.1, 0.1)
 
 var is_open := false
+var _base_y := 0.0   # kapalı konumdaki dönüş (duvar yönüne göre)
 var _tween: Tween
 var _mesh: MeshInstance3D
 var _shape: CollisionShape3D
 
 
 func _ready() -> void:
+	_base_y = rotation.y
 	var box := BoxMesh.new()
 	box.size = size
 	_mesh = MeshInstance3D.new()
@@ -63,7 +65,7 @@ func _open() -> void:
 	is_open = true
 	if door_id != "":
 		GameManager.set_flag("door_open_" + door_id)
-	_animate(deg_to_rad(-open_angle))
+	_animate(_base_y - deg_to_rad(open_angle))
 
 
 func _close(player: Node) -> bool:
@@ -74,12 +76,14 @@ func _close(player: Node) -> bool:
 	is_open = false
 	if door_id != "":
 		GameManager.flags.erase("door_open_" + door_id)
-	_animate(0.0)
+	_animate(_base_y)
 	return true
 
 
 func _player_in_swing(p: Node3D) -> bool:
-	var local := to_local(p.global_position)
+	# Kapalı konumun yerel çerçevesinde, kapının süpürdüğü kareye bak.
+	var closed := Transform3D(Basis(Vector3.UP, _base_y), global_position)
+	var local := closed.affine_inverse() * p.global_position
 	return local.x > -0.2 and local.x < size.x + 0.2 and absf(local.z) < size.x + 0.2
 
 
@@ -92,4 +96,4 @@ func _animate(target_y: float) -> void:
 
 func _set_open_instant(open: bool) -> void:
 	is_open = open
-	rotation.y = deg_to_rad(-open_angle) if open else 0.0
+	rotation.y = (_base_y - deg_to_rad(open_angle)) if open else _base_y

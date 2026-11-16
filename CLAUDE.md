@@ -17,6 +17,7 @@ Hikâye tamamen kurgusaldır; gerçek vakaymış gibi pazarlanmaz.
 ```
 godot --headless --path . --import
 godot --headless --path . --script tests/run_tests.gd
+godot --headless --path . --script tests/run_factory_tests.gd
 ```
 Godot: `Godot_v4.7.2-stable_win64_console.exe` (winget ile kurulu).
 

@@ -5,7 +5,7 @@ config_version=5
 
 config/name="SON VARDİYA: 03.17"
 config/description="Kurgusal birinci şahıs endüstriyel korku oyunu."
-run/main_scene="res://scenes/world/test_level.tscn"
+run/main_scene="res://scenes/world/factory.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 
 [autoload]
@@ -66,4 +66,5 @@ pause={
 
 [rendering]
 
+occlusion_culling/use_occlusion_culling=true
 environment/defaults/default_clear_color=Color(0.01, 0.012, 0.02, 1)
