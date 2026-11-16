@@ -39,7 +39,8 @@ A (6+ işçi, kayıtlar, yedek) · B (delil yetersiz, kaçış) · C (defteri im
 | 07 | Bölüm 1: Giriş ve Güvenlik | ✅ otomatik testlerle doğrulandı; baştan sona elle oynama bekliyor |
 | 08 | Bölüm 2: Üretim Hattı | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
 | 09 | Taklitçi düşman ve ilk kovalamaca | ✅ otomatik testlerle doğrulandı; elle oynama ve süre/denge ayarı bekliyor |
-| 10+ | Bölümler 3–8, Sayıcı, finaller, cila, build | ⏳ |
+| 10 | Bölüm 3: Personel Katı | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
+| 11+ | Bölümler 4–8, Sayıcı, finaller, cila, build | ⏳ |
 
 ## Ürün riskleri
 - Sanat ve ses üretimi: tüm modeller şu an geçici; Steam için sanatçı/varlık paketi gerekir.
@@ -86,3 +87,17 @@ Kod: `scripts/enemy/mimic.gd`, `scripts/world/shutter.gd`, kovalamaca mantığı
 - **Ölüm ve tekrar:** yakalanınca ekran kararır, kontrol noktası yüklenir (oyuncu dolabın başında), kovalamaca baştan başlar; sınırsız tekrar. F5/F9 artık konumu da kaydeder.
 - **Adillik:** Taklitçi başta uyur; çıkış kapısı senaryoda zorla açık; koşan oyuncu kola vardığında Taklitçi testte 14 m geride; kepenk geçitteki oyuncuya inmez.
 - **Bilinen sınırlar:** tipik kovalamaca ~25–35 sn (hedef 45–60 sn): oyuncu testi sonrası mesafe/hız ayarlanacak. Kepenk inerken yol ağı yeniden hesaplanır (~0,3 sn küçük takılma). Taklitçi şimdilik sadece Bölüm 2'de; merdiveni kullanmaz davranışı Aşama 12'de (Sayıcı) genişler.
+
+## Bölüm 3: Personel Katı (Aşama 10)
+Kod: `scripts/chapters/chapter3.gd`, işçi verisi `scripts/data/worker_data.gd` (11 işçi, tek yerde tutarlı).
+- **Başlangıç:** üst kat merdivenine çıkınca Bölüm 3 başlar (kayıt alınır). Görevler: altı kimlik, revir dolabı, Yusuf'un kartı.
+- **11 kimlik:** 6 zorunlu (ana rota) + 5 isteğe bağlı (gizli köşeler). Ana görev **herhangi altı** kimlikle biter; 11'i de toplanabilir ve kayda geçer (kritik eşya, kaybolmaz).
+  - Soyunma dolapları: Hasan (1), Ayşe (2), Fatma (3); dolap 4–6 plakaları revir kodu ipucudur.
+  - Yemekhane: çorba/sandalye olayı → Kemal; mutfak tezgâhı → Elif (isteğe bağlı).
+  - Revir: ilaç dolabı (264) → Zeynep; yatak altı → Ramazan (isteğe bağlı).
+  - Arşiv: çekmece → Mehmet; dosyalar → Nuray, Cemal, Hüseyin (isteğe bağlı).
+- **Revir kodu 264 (üç ipucu):** (1) dolap notu: "son üç hastanın dolap numaraları, geliş sırasıyla"; (2) revir defteri: Ayşe, Kemal, Zeynep; (3) soyunma plakaları: Ayşe 2, Kemal 6, Zeynep 4 → 264.
+- **Yemekhane:** çorba "hâlâ sıcak", sandalye geri çekilir, altında Kemal'in kimliği; yemekhaneye girince (Bölüm 3'te) kadın silueti olayı (`ev_cant_woman`).
+- **Kilit:** altı kimlikle personel bürosunun üç kapısı açılır (`ch3_ids_done`).
+- **Yusuf'un kartı ve sayım:** büroda kartı alınca Sayıcı 1'den 12'ye sayar; 12. satırda "On ikinci isim yazılı: Murat Demir." Bölüm 4'e geçiş ve kayıt.
+- **Kapsam notu:** 8 işçinin "dosyası" şimdilik kısa biyografi (kimlik başına tek paragraf); uzun belgeler/ses Aşama 19'da (diyalog/belge/yerelleştirme).

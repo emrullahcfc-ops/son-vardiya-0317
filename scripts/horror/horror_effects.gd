@@ -33,6 +33,9 @@ func _on_event(id: String) -> void:
 			_door_slam()
 		"ev_silhouette":
 			_silhouette(String(HorrorDirector.EVENTS[id]["area"]))
+		"ev_cant_woman":
+			_silhouette(String(HorrorDirector.EVENTS[id]["area"]))
+			AudioManager.say("Pencerenin önünde bir kadın duruyordu. Gözünü kırpınca yok oldu.", 4.0)
 
 
 func _player() -> Node3D:

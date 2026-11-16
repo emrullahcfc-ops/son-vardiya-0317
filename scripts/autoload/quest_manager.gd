@@ -12,6 +12,9 @@ const QUESTS := {
 	"ch2_start_lines": {"title": "Üç hattı sırayla çalıştır", "main": true},
 	"ch2_cabinet_code": {"title": "Bakım dolabının kodunu bul", "main": true},
 	"ch2_escape": {"title": "Taklitçiden kaç: kepenk kolunu çek", "main": true},
+	"ch3_collect_ids": {"title": "Altı işçinin kimliğini topla", "main": true},
+	"ch3_infirmary_code": {"title": "Revirin ilaç dolabının kodunu bul", "main": false},
+	"ch3_yusuf_card": {"title": "Personel bürosunda Yusuf'un kartını bul", "main": true},
 	"ch2_floor_key": {"title": "Kat anahtarını al", "main": true},
 }
 

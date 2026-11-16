@@ -5,15 +5,20 @@ signal item_added(item_id: String)
 signal item_removed(item_id: String)
 
 # Eşya tanımları: id -> {name, critical, desc}
-const ITEMS := {
+var ITEMS: Dictionary = {
 	"key_security_booth": {"name": "Güvenlik kulübesi anahtarı", "critical": true, "desc": "Güvenlik kulübesinin kapısını açar."},
 	"floor_key": {"name": "Kat anahtarı", "critical": true, "desc": "Personel katının kapısını açar."},
 	"worker_id_ayse": {"name": "Ayşe'nin kimliği", "critical": true, "desc": "11 işçiden biri."},
 	"multimeter": {"name": "Ölçü aleti", "critical": true, "desc": "Gerilim ölçer."},
 	"usb_drive": {"name": "USB bellek", "critical": true, "desc": "Delilleri kopyalamak için."},
+	"yusuf_card": {"name": "Yusuf'un personel kartı", "critical": true, "desc": "Babanın eski fabrika kartı."},
 }
 
 var _items: Array[String] = []
+
+
+func _init() -> void:
+	ITEMS.merge(WorkerData.item_defs(), true)  # 11 işçi kimliği
 
 
 func add_item(item_id: String) -> bool:
