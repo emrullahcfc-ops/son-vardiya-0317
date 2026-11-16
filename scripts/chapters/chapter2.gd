@@ -21,7 +21,6 @@ var dormant_timeout := 10.0    # oyuncu çıkmasa da uyanma süresi
 var deaths := 0
 var mimic: Mimic
 var shutter: Shutter
-var _overlay: ColorRect
 var _lever: Node
 
 signal player_died
@@ -303,16 +302,3 @@ func _cleanup_chase() -> void:
 	if shutter.is_down:
 		shutter.set_state_instant(false)
 		factory.rebake_navigation()
-
-
-func _fade(alpha: float, time: float) -> void:
-	if _overlay == null:
-		var layer := CanvasLayer.new()
-		layer.layer = 50
-		_overlay = ColorRect.new()
-		_overlay.color = Color(0, 0, 0, 0)
-		_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		layer.add_child(_overlay)
-		add_child(layer)
-		_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	create_tween().tween_property(_overlay, "color:a", alpha, time)

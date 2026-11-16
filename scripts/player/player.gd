@@ -26,6 +26,8 @@ const STAMINA_RESUME := 0.35  # yorulunca bu seviyeye gelmeden koşulamaz
 
 var stamina := 1.0
 var exhausted := false
+var hidden := false   # dolapta saklanıyor: düşman görmez, ses çıkarmaz
+var _noise_t := 0.0
 
 signal target_changed(target: Node)
 
@@ -47,6 +49,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED else Input.MOUSE_MODE_CAPTURED
 	elif event.is_action_pressed("interact") and controls_enabled and current_target and current_target.has_method("interact"):
 		current_target.interact(self)
+		get_viewport().set_input_as_handled()
 
 
 func _physics_process(delta: float) -> void:
@@ -67,7 +70,26 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, 30.0 * delta)
 
 	move_and_slide()
+	_emit_footstep_noise(delta)
 	_update_target()
+
+
+## Adım sesi: çömelmek sessiz, yürümek orta, koşmak gürültülü. Saklanırken ses yok.
+const NOISE_CROUCH := 1.5
+const NOISE_WALK := 4.5
+const NOISE_SPRINT := 11.0
+
+
+func _emit_footstep_noise(delta: float) -> void:
+	if hidden:
+		return
+	_noise_t -= delta
+	var flat := Vector2(velocity.x, velocity.z).length()
+	if flat < 0.6 or _noise_t > 0.0 or not is_on_floor():
+		return
+	_noise_t = 0.5
+	var r := NOISE_CROUCH if crouching else (NOISE_SPRINT if flat > WALK_SPEED + 0.6 else NOISE_WALK)
+	GameManager.make_noise(global_position, r, "step")
 
 
 func _update_stamina(delta: float, sprinting: bool) -> void:

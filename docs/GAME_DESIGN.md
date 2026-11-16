@@ -41,7 +41,8 @@ A (6+ işçi, kayıtlar, yedek) · B (delil yetersiz, kaçış) · C (defteri im
 | 09 | Taklitçi düşman ve ilk kovalamaca | ✅ otomatik testlerle doğrulandı; elle oynama ve süre/denge ayarı bekliyor |
 | 10 | Bölüm 3: Personel Katı | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
 | 11 | Bölüm 4: CCTV ve delil zaman çizelgesi | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
-| 12+ | Sayıcı, Bölümler 5–8, finaller, cila, build | ⏳ |
+| 12 | Sayıcı AI ve saklanma | ✅ otomatik testlerle doğrulandı; elle oynama ve denge ayarı bekliyor |
+| 13+ | Bölümler 5–8, iki zaman durumu, finaller, cila, build | ⏳ |
 
 ## Ürün riskleri
 - Sanat ve ses üretimi: tüm modeller şu an geçici; Steam için sanatçı/varlık paketi gerekir.
@@ -111,3 +112,16 @@ Kod: `scripts/chapters/chapter4.gd`, `scripts/ui/cctv_ui.gd`, veri `scripts/data
 - **Canlı kamera korkusu:** K5 (kamera odası) canlı izlenirken, en az bir kritik klip işaretlendiyse sandalyenin arkasında siluet + anons belirir (bir kez); ekran değişince siluet silinir, "Arkana bakıyorsun. Kimse yok."
 - **Tamamlanınca:** USB belleğe kopyalanır, **Selim–Yusuf ses kaydı** (6 satır altyazı) çalar, görev güncellenir: "Bodruma in: kontrol odasındaki mühür panosunu bul"; Bölüm 5'e geçilir ve kayıt alınır.
 - **Sınırlar:** klipler sahnelemedir (gerçek video yok); ses kaydı yalnızca altyazı + efekt (ses oyunculuğu yok); figürler düz silüet.
+
+## Sayıcı AI ve saklanma (Aşama 12)
+Kod: `scripts/enemy/sayici.gd` (ortak taban `enemy_base.gd`; Taklitçi de aynı tabanı kullanır), `scripts/chapters/sayici_controller.gd`, `scripts/interact/hide_spot.gd`.
+- **Durumlar:** devriye → şüphe → arama → takip → saldırı. Devriye zemin kat odalarını dolaşır (Bölüm 5'te, oyuncu zemin kata inince, oyuncudan en uzak noktada belirir).
+- **Sebepsiz bilmez:** yalnızca **görüş** (20 m, 110° koni, duvar/kapı/makine engeli; çömelen oyuncu makine arkasında görünmez; arkadaki oyuncu görünmez) ya da **ses** ile fark eder. Ses yarıçapları: çömelme 1,5 m, yürüme 4,5 m, koşu 11 m, kapı 6 m, radyo 16 m; duvar arkasında %60'a düşer. Şüphe kademeli artar (çömelen daha yavaş, koşan daha hızlı fark edilir); önce şüphe (durup bakar), sonra takip.
+- **Arama:** son bilinen konuma gider, 8 sn arar, devriyeye döner. Görüş kesilince 3,5 sn sonra aramaya geçer.
+- **Adil kaçış:** takip hızı 3,9 m/sn (yürüme 3,0 < Sayıcı < koşu 5,5; koşu dayanıklılığı sınırlı). Saldırı öncesi 0,7 sn uyarı: bu sürede uzaklaşan oyuncuya saldırı boşa gider. Yakalanınca ölüm → kontrol noktası; Sayıcı oyuncu zemin kata dönünce yeniden devriyeye başlar.
+- **Saklanma:** 3 dolap (güvenlik kulübesi, A Hattı, C Hattı). Görülürken saklanılamaz. İçeride oyuncu görünmez ve ses çıkarmaz (E ile çıkılır; ekranda ince aralık). Sayıcı aramada yakındaysa dolabı olasılıkla (%50) kontrol eder ve bulursa takip eder.
+- **Dikkat dağıtma:** 3 radyo (C Hattı, A Hattı, Bakım). Basınca 16 m'de gürültü; Sayıcı oraya gider. 12 sn bekleme.
+- **Ses taklidi:** `ev_voice_mimic`: yalnızca Bölüm 5+, Sayıcı devriyedeyken ve oyuncuyu görmüyorken, oyunda bir kez; "Hakan'ın sesi: Murat? Buraya gel..." Sayıcı 6 sn pusuda bekler.
+- **Debug:** **F6** (test modu) Sayıcı durumunu, şüpheyi ve son bilinen konumu ekranın sağ altında gösterir.
+- **Düzeltmeler:** oyuncu sahneye artık başlangıç konumunda eklenir (önceden bir an orijinde belirip yanlış alan olayı tetikliyordu); koşu dayanıklılık çubuğu ekranda görünür hale getirildi (önceden ekran dışındaydı).
+- **Sınırlar:** Sayıcı şimdilik düz silüet; Bölüm 5'in kendi bulmacaları (Aşama 13) yok, yani şu an Sayıcı'yı bodruma inmeye çalışırken deneyimlersiniz. Denge (hız, görüş, ses yarıçapları) elle oynayınca ayarlanacak.

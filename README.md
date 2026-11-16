@@ -6,7 +6,7 @@ Kurgusal, birinci şahıs, Türkçe endüstriyel korku oyunu. Godot 4.7 · GDScr
 
 ## Çalıştırma
 1. Godot 4.7.x ile `project.godot` dosyasını aç, ya da: `godot --path .`
-2. Kontroller: **WASD** hareket · **Shift** koş · **Ctrl** çömel · **E** etkileşim · **ESC** fare serbest · **F5/F9** kaydet/yükle · **F2/F3** alanlar arası ışınlanma · **F4** korku olaylarını oynat (test modu) · koşu dayanıklılığı sınırlıdır
+2. Kontroller: **WASD** hareket · **Shift** koş · **Ctrl** çömel · **E** etkileşim · **ESC** fare serbest · **F5/F9** kaydet/yükle · **F2/F3** alanlar arası ışınlanma · **F4** korku olaylarını oynat · **F6** düşman durumu (test modu) · koşu dayanıklılığı sınırlıdır
 
 ## Test
 ```
@@ -19,6 +19,7 @@ godot --headless --path . --script tests/run_chapter2_tests.gd
 godot --headless --path . --script tests/run_chapter3_tests.gd
 godot --headless --path . --script tests/run_chapter4_tests.gd
 godot --headless --fixed-fps 60 --path . --script tests/run_enemy_tests.gd
+godot --headless --fixed-fps 60 --path . --script tests/run_sayici_tests.gd
 ```
 
 Tasarım ve yol haritası: [docs/GAME_DESIGN.md](docs/GAME_DESIGN.md)

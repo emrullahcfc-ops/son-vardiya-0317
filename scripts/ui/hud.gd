@@ -7,6 +7,7 @@ var _quest: Label
 var _fps: Label
 var _area: Label
 var _stam: ColorRect
+var _debug: Label
 var _sub_timer: SceneTreeTimer
 var _player: Node
 
@@ -44,9 +45,19 @@ func _ready() -> void:
 	_stam = ColorRect.new()
 	_stam.color = Color(0.85, 0.85, 0.8, 0.7)
 	root.add_child(_stam)
-	_stam.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
-	_stam.position = Vector2(20, -30)
-	_stam.size = Vector2(160, 6)
+	_stam.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)  # kenara göre ofsetler
+	_stam.offset_left = 20
+	_stam.offset_right = 180
+	_stam.offset_top = -30
+	_stam.offset_bottom = -24
+	_debug = _make_label(root, Control.PRESET_BOTTOM_RIGHT, 14)
+	_debug.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_debug.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	_debug.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	_debug.offset_right = -20
+	_debug.offset_left = -20
+	_debug.offset_bottom = -100
+	_debug.offset_top = -100
 	GameManager.area_entered.connect(_on_area)
 	AudioManager.subtitle.connect(_on_subtitle)
 	QuestManager.quest_started.connect(func(_i): _refresh_quest())
@@ -72,8 +83,15 @@ func _make_label(parent: Control, preset: int, size: int) -> Label:
 
 func _process(_d: float) -> void:
 	_fps.text = "%d FPS" % Engine.get_frames_per_second()
+	var dbg := ""
+	if GameManager.debug_ai:
+		for e in get_tree().get_nodes_in_group("enemies"):
+			if e.has_method("debug_text"):
+				dbg += e.debug_text() + "
+"
+	_debug.text = dbg
 	if _player and "stamina" in _player:
-		_stam.size.x = 160.0 * _player.stamina
+		_stam.offset_right = 20.0 + 160.0 * _player.stamina
 		_stam.color = Color(0.9, 0.4, 0.3, 0.8) if _player.exhausted else Color(0.85, 0.85, 0.8, 0.7)
 	var t: Node = _player.current_target if _player else null
 	_prompt.text = ("[E] " + t.get_prompt()) if (t and t.has_method("get_prompt")) else ""

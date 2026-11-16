@@ -71,7 +71,7 @@ func _do_interact(player: Node) -> bool:
 func force_open() -> void:
 	if is_open:
 		return
-	_open()
+	_open(false)  # düşmanın açışı gürültü sayılmaz (kendi sesini duymasın)
 
 
 func _is_locked() -> bool:
@@ -80,7 +80,9 @@ func _is_locked() -> bool:
 	return required_flag != "" and not GameManager.has_flag(required_flag)
 
 
-func _open() -> void:
+func _open(noisy := true) -> void:
+	if noisy:
+		GameManager.make_noise(global_position, 6.0, "door")  # oyuncu açınca düşman duyabilir
 	is_open = true
 	if door_id != "":
 		GameManager.set_flag("door_open_" + door_id)

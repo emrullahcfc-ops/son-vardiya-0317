@@ -2,10 +2,10 @@ extends Node
 ## Gerçek oyun içi ekran görüntüsü alır: godot --path . res://tools/capture.tscn
 # [dosya, oda, durus_x, durus_z, bakis_x, bakis_z, (olay)]  — dünya koordinatları (metre)
 const SHOTS := [
-	["b4_01_kamera_odasi", "u_cam", 8.5, 2.0, 15.0, 2.0],
-	["b4_02_monitor_b_hatti_0314", "u_cam", 8.5, 2.0, 15.0, 2.0, "ch4_ui", "k3", "c_0314"],
-	["b4_03_monitor_giris_0317", "u_cam", 8.5, 2.0, 15.0, 2.0, "ch4_ui", "k1", "c_0317"],
-	["b4_04_monitor_pompa_0316", "u_cam", 8.5, 2.0, 15.0, 2.0, "ch4_ui", "k6", "c_0316"],
+	["b5_01_sayici_devriye", "g_lineB", 0.0, 6.5, 0.0, -2.0, "sayici"],
+	["b5_02_sayici_yakin_debug", "g_lineB", 0.0, 4.0, 0.0, -2.0, "sayici_near"],
+	["b5_03_dolap_icinden", "g_guard", -12.0, 14.0, -13.3, 15.3, "hide"],
+	["b5_04_dolap_disi", "g_guard", -9.0, 11.0, -13.3, 15.3],
 ]
 func _ready() -> void:
 	var level: Node = load("res://scenes/world/factory.tscn").instantiate()
@@ -30,6 +30,22 @@ func _ready() -> void:
 		elif s.size() > 6 and s[6] == "ch2_shutter":
 			var c4: Node = level.find_children("*", "Chapter2", false, false)[0]
 			c4.shutter.set_state_instant(true)
+		elif s.size() > 6 and (s[6] == "sayici" or s[6] == "sayici_near"):
+			GameManager.set_chapter(5)
+			GameManager.set_flag("ch4_done")
+			GameManager.debug_ai = true
+			var sc: Node = level.find_children("*", "SayiciController", false, false)[0]
+			if sc.sayici == null:
+				sc.spawn()
+			var sy: Node = sc.sayici
+			sy.route.clear()
+			sy.global_position = Vector3(0, 0.05, -1.5) if s[6] == "sayici" else Vector3(0, 0.05, 0.5)
+			sy.rotation.y = PI
+			sy.suspicion = 0.5
+		elif s.size() > 6 and s[6] == "hide":
+			for h in get_tree().get_nodes_in_group("hide_spots"):
+				if h.global_position.distance_to(Vector3(-13.3, 0, 15.3)) < 0.5:
+					h.interact(level.player)
 		elif s.size() > 6 and s[6] == "ch4_ui":
 			GameManager.set_flag("ch3_done")
 			GameManager.set_chapter(4)

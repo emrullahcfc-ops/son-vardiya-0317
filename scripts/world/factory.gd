@@ -29,6 +29,9 @@ func _ready() -> void:
 	var ch1 := Chapter1.new()
 	ch1.factory = self
 	add_child(ch1)
+	var sc := SayiciController.new()
+	sc.factory = self
+	add_child(sc)
 	var ch4 := Chapter4.new()
 	ch4.factory = self
 	add_child(ch4)
@@ -62,6 +65,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		KEY_F3:
 			if test_mode:
 				teleport_step(-1)
+		KEY_F6:
+			if test_mode:
+				GameManager.debug_ai = not GameManager.debug_ai
 		KEY_F4:
 			if test_mode:  # korku olaylarını sırayla oynat (cooldown yok sayılır)
 				var ids: Array = HorrorDirector.EVENTS.keys()
@@ -164,13 +170,14 @@ func _build_environment() -> void:
 func _spawn_player() -> void:
 	player = PLAYER_SCENE.instantiate()
 	player.add_to_group("player")
-	add_child(player)
+	# Konum EKLEMEDEN ÖNCE ayarlanır: yoksa oyuncu bir an orijinde (B Hattı) belirip yanlış alan olayı tetikler.
 	var start := FactoryLayout.room(FactoryLayout.START_ROOM)
-	player.global_position = FactoryLayout.room_center(start) + Vector3(0, 0.15, 2.0)
+	player.position = FactoryLayout.room_center(start) + Vector3(0, 0.15, 2.0)
 	if GameManager.checkpoint_pos.size() == 4:
 		var cp: Array = GameManager.checkpoint_pos
-		player.global_position = Vector3(cp[0], cp[1], cp[2])
+		player.position = Vector3(cp[0], cp[1], cp[2])
 		player.rotation.y = float(cp[3])
+	add_child(player)
 	var hud := CanvasLayer.new()
 	hud.set_script(HUD_SCRIPT)
 	add_child(hud)

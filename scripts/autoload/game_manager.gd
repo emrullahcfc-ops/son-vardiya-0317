@@ -3,6 +3,9 @@ extends Node
 
 signal chapter_changed(chapter_id: int)
 signal settings_changed
+signal noise_made(pos: Vector3, radius: float, source: String)  # düşmanların duyabileceği sesler
+
+var debug_ai := false  # F6: düşman durumunu ekranda göster
 
 const SETTINGS_PATH := "user://settings.json"
 
@@ -35,6 +38,11 @@ func set_flag(id: String, value: Variant = true) -> void:
 
 func set_checkpoint(pos: Vector3, yaw: float) -> void:
 	checkpoint_pos = [pos.x, pos.y, pos.z, yaw]
+
+
+## Ses olayı: yarıçap içindeki düşmanlar duyabilir.
+func make_noise(pos: Vector3, radius: float, source: String = "") -> void:
+	noise_made.emit(pos, radius, source)
 
 
 func has_flag(id: String) -> bool:

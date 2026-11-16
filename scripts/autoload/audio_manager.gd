@@ -197,6 +197,13 @@ func _synth(sound: String) -> AudioStreamWAV:
 				var t := float(i) / RATE
 				var pulse := 0.55 + 0.45 * sin(TAU * 4.0 * t)
 				d[i] = (sin(TAU * 60.0 * t) * 0.5 + sin(TAU * 120.0 * t) * 0.3 + rng.randf_range(-0.1, 0.1)) * pulse * 0.7
+		"radio":
+			n = int(RATE * 1.8)
+			d.resize(n)
+			for i in n:
+				var t := float(i) / RATE
+				var gate := 1.0 if sin(TAU * 7.0 * t) > -0.3 else 0.4
+				d[i] = (rng.randf_range(-1, 1) * 0.35 + sin(TAU * 660.0 * t) * 0.25) * gate * (1.0 - t / 1.8)
 		"hum":
 			loop = true
 			n = RATE * 3

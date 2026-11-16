@@ -3,6 +3,7 @@ extends Node
 ## Bölüm betikleri için ortak yardımcılar: kutu/etkileşim noktası/eşya/belge üretimi, görev tamamlama.
 
 var factory: Node3D
+var _overlay: ColorRect
 
 
 ## Kontrol noktası: oyuncunun konumu + kayıt.
@@ -82,3 +83,17 @@ func _doc(pos: Vector3, title: String, body: String, flag := "") -> void:
 	d.flag_on_read = flag
 	d.position = pos
 	factory.add_child(d)
+
+
+## Ekranı karart / aç (ölüm geçişi).
+func _fade(alpha: float, time: float) -> void:
+	if _overlay == null:
+		var layer := CanvasLayer.new()
+		layer.layer = 50
+		_overlay = ColorRect.new()
+		_overlay.color = Color(0, 0, 0, 0)
+		_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		layer.add_child(_overlay)
+		add_child(layer)
+		_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	create_tween().tween_property(_overlay, "color:a", alpha, time)
