@@ -23,6 +23,8 @@ const QUESTS := {
 	"ch6_locker": {"title": "2026'da vardiya dolabını aç (kodu 2004'ten al)", "main": true},
 	"ch6_breaker": {"title": "2004'te bakım odasındaki şalter panosuna kolu tak", "main": true},
 	"ch6_corridor": {"title": "Uzayan koridordan kaç ve şalteri indir", "main": true},
+	"ch7_unseal": {"title": "Bakım tüneli: hortum, jeneratör, devre ve basınçla Mühürlü Alan'ı aç", "main": true},
+	"ch7_evidence": {"title": "Mühürlü Alan'da delil topla: en az 6 isimlik, fotoğraf ve kaset", "main": true},
 	"ch2_floor_key": {"title": "Kat anahtarını al", "main": true},
 }
 

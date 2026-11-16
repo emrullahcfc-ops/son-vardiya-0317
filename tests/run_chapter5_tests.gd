@@ -237,7 +237,11 @@ func _run() -> void:
 	_check(ch.press_fan(2) == "ok" and ch.press_fan(3) == "wrong", "F2 doğru, F3 yanlış → sıfırlanır")
 	_check(ch.exposure <= 0.9 and not ch._dead, "tekrarlayan hata ölümcül olmaz (üst sınır 0.9)")
 	ch.exposure = 0.0
-	_check(ch.press_fan(2) == "ok" and ch.press_fan(1) == "ok" and ch.press_fan(3) == "ok_done", "doğru sıra F2 → F1 → F3 tamamlanır (tekrar deneme sonrası)")
+	_check(ch.press_fan(2) == "ok", "F2 doğru")
+	sv.save_game()
+	gm.flags["ch5_fan_seq"] = [2.0]   # JSON'dan dönmüş gibi (ondalık)
+	_check(ch.press_fan(2) == "already" and ch.fan_sequence() == [2], "kayıttan sonra aynı fana basmak 'zaten çalışıyor' der, sıfırlamaz")
+	_check(ch.press_fan(1) == "ok" and ch.press_fan(3) == "ok_done", "doğru sıra F2 → F1 → F3 tamamlanır (tekrar deneme sonrası)")
 	_check(gm.has_flag("ch5_fans") and qm.is_completed("ch5_fans"), "görev tamamlandı")
 	_check(ch.density_of("b_pump") == 0.0 and ch.density_of("b_ctrl") == 0.0 and ch.density_of("b_pipe") > 0.0, "fanlar pompa ve kontrol odasını temizler; boru hâlâ hafif gazlı")
 

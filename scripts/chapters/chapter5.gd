@@ -214,8 +214,13 @@ func take_filter(id: String) -> bool:
 
 # ------------------------------------------------------------------ fanlar (F2 → F1 → F3)
 func fan_sequence() -> Array:
+	# JSON kaydından sayılar ondalık gelir; Array.has/== için tam sayıya çevrilir.
 	var v: Variant = GameManager.flags.get("ch5_fan_seq", [])
-	return v if v is Array else []
+	var out: Array = []
+	if v is Array:
+		for x in v:
+			out.append(int(x))
+	return out
 
 
 func press_fan(n: int) -> String:

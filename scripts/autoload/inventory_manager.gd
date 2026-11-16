@@ -12,6 +12,9 @@ var ITEMS: Dictionary = {
 	"multimeter": {"name": "Ölçü aleti", "critical": true, "desc": "Gerilim ölçer."},
 	"gas_meter": {"name": "Gaz ölçer", "critical": true, "desc": "Havadaki gaz seviyesini gösterir."},
 	"breaker_handle": {"name": "Şalter kolu", "critical": true, "desc": "Ana şalter panosuna takılır."},
+	"fuel_can": {"name": "Yakıt bidonu", "critical": true, "desc": "Jeneratör yakıtı."},
+	"camera": {"name": "Fotoğraf makinesi", "critical": true, "desc": "Delil fotoğrafı çekmek için."},
+	"cassette": {"name": "Kaset", "critical": true, "desc": "Ayşe'nin ses kaydı."},
 	"usb_drive": {"name": "USB bellek", "critical": true, "desc": "Delilleri kopyalamak için."},
 	"yusuf_card": {"name": "Yusuf'un personel kartı", "critical": true, "desc": "Babanın eski fabrika kartı."},
 }

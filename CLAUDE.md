@@ -28,17 +28,19 @@ godot --headless --fixed-fps 60 --path . --script tests/run_sayici_tests.gd
 godot --headless --fixed-fps 60 --path . --script tests/run_chapter5_tests.gd
 godot --headless --fixed-fps 60 --path . --script tests/run_time_tests.gd
 godot --headless --fixed-fps 60 --path . --script tests/run_chapter6_tests.gd
+godot --headless --fixed-fps 60 --path . --script tests/run_chapter7_tests.gd
 ```
 Godot: `Godot_v4.7.2-stable_win64_console.exe` (winget ile kurulu).
 
 ## Mimari
 - Autoload: GameManager, SaveManager, QuestManager, InventoryManager, AudioManager, HorrorDirector (`scripts/autoload/`).
 - Korku: `HorrorDirector` karar verir, `scripts/horror/horror_effects.gd` uygular; sesler `AudioManager`da sentezlenir.
-- Bölümler: `scripts/chapters/` (`ChapterBase` ortak yardımcılar, `Chapter1`–`Chapter6`, arayüz `scripts/ui/cctv_ui.gd`); işçi verisi `scripts/data/worker_data.gd`. Kapı kilitleri `FactoryLayout.DOORS` içinde `req_item`/`req_flag`.
+- Bölümler: `scripts/chapters/` (`ChapterBase` ortak yardımcılar, `Chapter1`–`Chapter7`, arayüz `scripts/ui/cctv_ui.gd`); işçi verisi `scripts/data/worker_data.gd`. Kapı kilitleri `FactoryLayout.DOORS` içinde `req_item`/`req_flag`.
 - Düşman: ortak taban `scripts/enemy/enemy_base.gd`; `mimic.gd` (Taklitçi), `sayici.gd` (Sayıcı; algı = görüş + ses, `GameManager.make_noise`), saklanma `scripts/interact/hide_spot.gd`.
 - (Taklitçi) `scripts/enemy/mimic.gd` (NavigationAgent3D; yol ağı `factory.gd` içinde koddan bake edilir, kepenk inince yeniden). `scripts/world/shutter.gd`.
 - Zaman durumları: `scripts/world/time_layers.gd` (2026/2004 katmanları, güvenli geçiş), `scripts/interact/card_reader.gd`; durum `GameManager.time_state`. Bir düğümü yalnızca bir zamanda var saymak için `time_layers.register(düğüm, "2004")`.
 - Pencereli görüntü/çekim: Vulkan çökerse `--rendering-driver opengl3 --rendering-method gl_compatibility` kullan.
+- Kayıt/JSON uyarısı: JSON'dan okunan sayı dizileri ondalık (1.0) gelir; bayrak olarak saklanan sayı dizilerini kullanmadan önce `int()` ile normalize et (Array.has/== tür duyarlıdır).
 - Oyuncu: `scenes/player/player.tscn`, `scripts/player/player.gd`.
 - Etkileşim: `Interactable` tabanı → `Door`, `Pickup`, `Document` (`scripts/interact/`).
 - Kayıt: `user://savegame.json` (+ `.bak`). F5 kaydet, F9 yükle (test sahnesinde).

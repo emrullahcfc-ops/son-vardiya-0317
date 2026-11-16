@@ -2,9 +2,10 @@ extends Node
 ## Gerçek oyun içi ekran görüntüsü alır: godot --path . res://tools/capture.tscn
 # [dosya, oda, durus_x, durus_z, bakis_x, bakis_z, (olay)]  — dünya koordinatları (metre)
 const SHOTS := [
-	["c6_01_beton_2026", "g_load", 9.0, 12.0, 13.4, 12.0, "ch6_state"],
-	["c6_02_depo_2004_terminal", "g_load", 9.0, 12.0, 14.9, 12.0, "ch6_2004"],
-	["c6_03_koridor_iscileri", "g_load", 9.0, 12.0, 14.9, 12.0, "ch6_corridor"],
+	["d7_01_tunel_hortum_jenerator", "b_tunnel", -2.0, -17.0, 0.0, -23.65, "ch7_state"],
+	["d7_02_tunel_devre_basinc", "b_tunnel", 1.0, -15.0, 5.65, -15.4, "ch7_state"],
+	["d7_03_muhurlu_alan_deliller", "b_sealed", -8.0, -13.0, -13.0, -19.0, "ch7_open"],
+	["d7_04_son_sayim", "b_sealed", -8.0, -13.0, -11.0, -18.0, "ch7_open"],
 ]
 func _ready() -> void:
 	var level: Node = load("res://scenes/world/factory.tscn").instantiate()
@@ -30,6 +31,12 @@ func _ready() -> void:
 			elif s[6] == "ch6_corridor":
 				InventoryManager.add_item("breaker_handle")
 				c8.use_breaker_panel()
+		elif s.size() > 6 and (s[6] == "ch7_state" or s[6] == "ch7_open"):
+			GameManager.set_chapter(7)
+			for f in ["ch4_done", "ch5_done", "ch6_done"]:
+				GameManager.set_flag(f)
+			if s[6] == "ch7_open":
+				GameManager.set_flag("ch7_unsealed")
 		elif s.size() > 6 and s[6] == "time_2004":
 			level.time_layers.instant = true
 			level.time_layers.switch_to("2004")

@@ -45,7 +45,8 @@ A (6+ işçi, kayıtlar, yedek) · B (delil yetersiz, kaçış) · C (defteri im
 | 13 | Bölüm 5: Gaz ve havalandırma | ✅ otomatik testlerle doğrulandı; elle oynama ve denge ayarı bekliyor |
 | 14 | İki zaman durumu altyapısı (2026/2004) | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
 | 15 | Bölüm 6: 03.17 Vardiyası | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
-| 16+ | Bölümler 7–8, finaller, cila, build | ⏳ |
+| 16 | Bölüm 7: Betonun Arkası | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
+| 17+ | Bölüm 8, finaller, cila, build | ⏳ |
 
 ## Ürün riskleri
 - Sanat ve ses üretimi: tüm modeller şu an geçici; Steam için sanatçı/varlık paketi gerekir.
@@ -158,3 +159,16 @@ Kod: `scripts/chapters/chapter6.gd`, `scripts/ui/choice_ui.gd`; zaman altyapıs�
 - **Şalter sahnesi:** cevap verdikten sonra şalter indirilir; zaman durur, oyuncu bakım odasına 2026'da döner, Bölüm 7'ye geçilir ve kayıt alınır.
 - **Ölüm/tekrar:** koridorda yakalanınca bakım odasındaki kontrol noktasına dönülür (kol kaybolmaz, zaman durumu tutarlı); panoya kol takılarak yeniden denenir.
 - **Sınırlar:** Sayıcı dönüşten sonra fabrikada yine devriyeye çıkar (Bölüm 7'de de sürer); seçim penceresi ve koridor görseli sade; ses oyunculuğu yok.
+
+## Bölüm 7: Betonun Arkası (Aşama 16)
+Kod: `scripts/chapters/chapter7.gd`, veri `scripts/data/evidence_data.gd`. Bölüm 6 bitince başlar. Mühürlü Alan'ın iki kapısı (`b_tunnel↔b_sealed`, `b_ctrl↔b_sealed`) `ch7_unsealed` bayrağına kilitlidir.
+- **Bakım tüneli, dört sistem (hepsi çözülünce kilit düşer, kontrol noktası):**
+  1. **Hidrolik hortum:** güney duvarda BASINÇ / DÖNÜŞ / TAHLİYE girişleri; her giriş renk döngüsü (boş, kırmızı, mavi, yeşil). Çözüm "Hortum renk kodu" belgesinden: kırmızı basınç, mavi dönüş, yeşil tahliye. Yanlışlar serbestçe düzeltilir.
+  2. **Jeneratör:** yakıt bidonu (kuzeydoğu kasası) gerekir; yoksa "depo boş" mesajı.
+  3. **Kilit devresi:** 4 anahtar; jeneratör çalışınca etkin. Desen "Devre şeması" belgesinde: 1 ve 3 yukarı, 2 ve 4 aşağı. Yanlışta ışık "n/4 doğru" gösterir.
+  4. **Basınç dengeleme:** başlangıç 9 bar; vana A −3, B +2, C −1; hedef 5 bar. 10 ve üstü ya da 0 ve altı: emniyet valfi açar, **basınç 9'a sıfırlanır** (başarısızlık sonrası tekrar). Hortum + jeneratör gerekir. Çözüm örneği: A, C.
+- **18 delil** (`GameManager.flags["evidence"]`, kayıtta kalıcı, silme yolu yok): 11 isimlik (işçi başına bir), 3 ayakkabı, 3 fiziksel iz (tırnak, el izi, gaz çizgisi), 1 fotoğraf (makine gerekir). Aynı delil iki kez eklenmez.
+- **Kaset:** Yusuf–Selim–Ayşe kayıt (5 altyazı satırı); kaset çalardan çalınır.
+- **Son sayım ve final rotası:** ≥6 isimlik + fotoğraf + kaset (alan açıkken) tamamlanınca Sayıcı toplanan isimlikleri tek tek sayar, sonunda "Murat Demir. Sayım tamam." Ardından `ch7_done`, `final_route_open`, `final_metrics` (isimlik sayısı, delil, kaset, fotoğraf, Yusuf seçimi) yazılır ve **Bölüm 8**'e geçilir (Aşama 17). Final ölçütleri Aşama 18'in son çözümleyicisine girdi olacaktır.
+- **Sınırlar:** Mühürlü Alan şimdilik sade (isimlikler yerde, masalar kutu); beton görseli yok (kapı kilidi ve notla anlatılır); Sayıcı sayımda yalnızca altyazı + efekt.
+- **Düzeltilen hata:** kayıttan yüklenince JSON sayıları ondalık (1.0) geliyordu; hortum (Bölüm 7) ve fan sırası (Bölüm 5) dizileri bu yüzden eşleşmiyordu (kayıttan sonra bulmaca tamamlanamıyordu). İki dizi de tam sayıya normalize edildi, regresyon testleri eklendi.

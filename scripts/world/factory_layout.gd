@@ -70,8 +70,8 @@ const DOORS := [
 	{"f": "B", "a": "b_pipe", "b": "b_fan", "axis": "z", "c": -12, "p": 11},
 	{"f": "B", "a": "b_pump", "b": "b_tunnel", "axis": "z", "c": -12, "p": 0},
 	{"f": "B", "a": "b_fan", "b": "b_tunnel", "axis": "x", "c": 6, "p": -18},
-	{"f": "B", "a": "b_tunnel", "b": "b_sealed", "axis": "x", "c": -6, "p": -18},
-	{"f": "B", "a": "b_ctrl", "b": "b_sealed", "axis": "z", "c": -12, "p": -11},
+	{"f": "B", "a": "b_tunnel", "b": "b_sealed", "axis": "x", "c": -6, "p": -18, "req_flag": "ch7_unsealed", "hint": "Mühürlü Alan: hidrolik kilit kapalı. Bakım tünelindeki sistemi çalıştır."},
+	{"f": "B", "a": "b_ctrl", "b": "b_sealed", "axis": "z", "c": -12, "p": -11, "req_flag": "ch7_unsealed", "hint": "Mühürlü Alan: hidrolik kilit kapalı. Bakım tünelindeki sistemi çalıştır."},
 ]
 
 # Rampalar kat değiştirir. Eğim yukarı doğru +z yönündedir.
