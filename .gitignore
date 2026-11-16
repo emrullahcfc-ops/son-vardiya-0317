@@ -1,0 +1,15 @@
+# Godot
+.godot/
+*.import
+export_presets.cfg.bak
+/builds/
+*.translation
+
+# OS / editör
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Claude Code yerel ayarları
+.claude/settings.local.json
