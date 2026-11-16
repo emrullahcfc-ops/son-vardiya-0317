@@ -42,7 +42,8 @@ A (6+ işçi, kayıtlar, yedek) · B (delil yetersiz, kaçış) · C (defteri im
 | 10 | Bölüm 3: Personel Katı | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
 | 11 | Bölüm 4: CCTV ve delil zaman çizelgesi | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
 | 12 | Sayıcı AI ve saklanma | ✅ otomatik testlerle doğrulandı; elle oynama ve denge ayarı bekliyor |
-| 13+ | Bölümler 5–8, iki zaman durumu, finaller, cila, build | ⏳ |
+| 13 | Bölüm 5: Gaz ve havalandırma | ✅ otomatik testlerle doğrulandı; elle oynama ve denge ayarı bekliyor |
+| 14+ | İki zaman durumu, Bölümler 6–8, finaller, cila, build | ⏳ |
 
 ## Ürün riskleri
 - Sanat ve ses üretimi: tüm modeller şu an geçici; Steam için sanatçı/varlık paketi gerekir.
@@ -125,3 +126,12 @@ Kod: `scripts/enemy/sayici.gd` (ortak taban `enemy_base.gd`; Taklitçi de aynı 
 - **Debug:** **F6** (test modu) Sayıcı durumunu, şüpheyi ve son bilinen konumu ekranın sağ altında gösterir.
 - **Düzeltmeler:** oyuncu sahneye artık başlangıç konumunda eklenir (önceden bir an orijinde belirip yanlış alan olayı tetikliyordu); koşu dayanıklılık çubuğu ekranda görünür hale getirildi (önceden ekran dışındaydı).
 - **Sınırlar:** Sayıcı şimdilik düz silüet; Bölüm 5'in kendi bulmacaları (Aşama 13) yok, yani şu an Sayıcı'yı bodruma inmeye çalışırken deneyimlersiniz. Denge (hız, görüş, ses yarıçapları) elle oynayınca ayarlanacak.
+
+## Bölüm 5: Gaz ve havalandırma (Aşama 13)
+Kod: `scripts/chapters/chapter5.gd`. Ortak yardımcılar `chapter_base.gd` (saklanma dolabı artık burada), kovalamaca için `SayiciController.spawn_at`.
+- **Gaz sistemi:** bodrum odaları gazlıdır (Area3D bölgeleri): boru 0,04 · fan odası 0,06 · pompa 0,07 · kontrol 0,09 · tünel 0,12 (saniyede zehirlenme, filtresizken). Fanlar çalışınca pompa ve kontrol odası temizlenir. **Gaz ölçer** (iniş masasında) ekranda gaz seviyesini gösterir. Ekranda filtre sayısı, takılı filtrenin süresi, zehirlenme yüzdesi ve "FİLTRE YOK — GAZDAN ÇIK" uyarısı vardır.
+- **Filtre:** gazdayken otomatik takılır, 30 sn korur. Dünyada 7 filtre: yedek dolap 5 (en fazla 3 taşınır), boru kutusu 1, fan odası kutusu 1. Ana rota ≈ 60 sn gaz = 2 filtre → iki tam deneme + pay. Filtre biterken uyarı, bitince net mesaj; filtresiz kalınca zehirlenme %100'de bayılma → kontrol noktasına dönülür (kaynaklar kayıttan geri gelir: softlock yok). Hafif gaz tek geçişte filtresiz öldürmez.
+- **Fan bulmacası F2 → F1 → F3:** iki ipucu: iniş masasındaki havalandırma kılavuzu ve pompadaki kazancı Hüseyin'in notu. Yanlış sırada sistem sıfırlanır ve ani gaz (+0,25; ölümcül değil, üst sınır 0,9) olur; sınırsız tekrar. Tamamlanınca kontrol noktası.
+- **Sayıcı kovalamacası:** fanlar bitince pompa odasına girince Sayıcı bodrum merdiveninden iner ve kovalar. Kaçış: pompadaki **buhar vanası** (kapıda 12 sn buhar perdesi görüşü keser, hareketi engellemez; vision katmanı 16) + **saklanma dolapları** (pompa, kontrol). Sayıcı aramayı bırakınca geri çekilir. Yakalanınca fan kontrol noktasına dönülür, kovalamaca yeniden başlar.
+- **Mühür panosu:** kontrol odasında. Fanlar + kovalamaca bitmeden ve Yusuf'un kartı olmadan çalışmaz. Kartla **Yusuf elektronik onayı** + **interkom kadın sesi** ("Sen on ikincisin"); Bölüm 6'ya geçiş ve kayıt. Kontrol odasına girince `ev_intercom` olayı da çalar.
+- **Sınırlar:** gaz görseli yok (yalnızca ekran göstergesi ve uyarılar); buhar basit parçacık; ses oyunculuğu yok; Sayıcı'nın bodrum rotası tek senaryo (devriye bodrumda sürmez).

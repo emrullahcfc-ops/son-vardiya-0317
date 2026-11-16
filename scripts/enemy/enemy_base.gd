@@ -66,7 +66,7 @@ func can_see_player() -> bool:
 
 
 func _clear_line(from: Vector3, to: Vector3) -> bool:
-	var q := PhysicsRayQueryParameters3D.create(from, to, 1)
+	var q := PhysicsRayQueryParameters3D.create(from, to, 1 | 16)  # 16: görüş engelleri (buhar perdesi)
 	q.exclude = [get_rid()]
 	return get_world_3d().direct_space_state.intersect_ray(q).is_empty()
 

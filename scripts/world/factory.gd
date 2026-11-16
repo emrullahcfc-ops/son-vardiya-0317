@@ -32,6 +32,9 @@ func _ready() -> void:
 	var sc := SayiciController.new()
 	sc.factory = self
 	add_child(sc)
+	var ch5 := Chapter5.new()
+	ch5.factory = self
+	add_child(ch5)
 	var ch4 := Chapter4.new()
 	ch4.factory = self
 	add_child(ch4)

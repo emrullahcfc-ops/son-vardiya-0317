@@ -33,6 +33,9 @@ func _on_event(id: String) -> void:
 			_door_slam()
 		"ev_silhouette":
 			_silhouette(String(HorrorDirector.EVENTS[id]["area"]))
+		"ev_intercom":
+			AudioManager.play_sfx("chime")
+			AudioManager.say("[İnterkom — kadın sesi] ...on bir... on bir kişiydik... Murat? Beni duyuyor musun?", 6.0)
 		"ev_cant_woman":
 			_silhouette(String(HorrorDirector.EVENTS[id]["area"]))
 			AudioManager.say("Pencerenin önünde bir kadın duruyordu. Gözünü kırpınca yok oldu.", 4.0)

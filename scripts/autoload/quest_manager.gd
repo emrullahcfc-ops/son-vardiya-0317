@@ -17,6 +17,8 @@ const QUESTS := {
 	"ch3_yusuf_card": {"title": "Personel bürosunda Yusuf'un kartını bul", "main": true},
 	"ch4_mark_evidence": {"title": "Kamera kayıtlarını saat sırasına göre işaretle", "main": true},
 	"ch4_basement": {"title": "Bodruma in: kontrol odasındaki mühür panosunu bul", "main": true},
+	"ch5_fans": {"title": "Fanları doğru sırayla çalıştır", "main": true},
+	"ch5_seal": {"title": "Mühür panosuna Yusuf'un kartını okut", "main": true},
 	"ch2_floor_key": {"title": "Kat anahtarını al", "main": true},
 }
 

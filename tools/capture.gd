@@ -2,10 +2,11 @@ extends Node
 ## Gerçek oyun içi ekran görüntüsü alır: godot --path . res://tools/capture.tscn
 # [dosya, oda, durus_x, durus_z, bakis_x, bakis_z, (olay)]  — dünya koordinatları (metre)
 const SHOTS := [
-	["b5_01_sayici_devriye", "g_lineB", 0.0, 6.5, 0.0, -2.0, "sayici"],
-	["b5_02_sayici_yakin_debug", "g_lineB", 0.0, 4.0, 0.0, -2.0, "sayici_near"],
-	["b5_03_dolap_icinden", "g_guard", -12.0, 14.0, -13.3, 15.3, "hide"],
-	["b5_04_dolap_disi", "g_guard", -9.0, 11.0, -13.3, 15.3],
+	["b6_01_bodrum_inis", "b_land", 18.0, -5.5, 18.5, -11.0, "ch5_start"],
+	["b6_02_boru_gaz_hud", "b_pipe", 14.5, -5.0, 8.0, -9.0, "ch5_gas"],
+	["b6_03_fan_odasi", "b_fan", 8.0, -14.0, 15.5, -18.0, "ch5_gas"],
+	["b6_04_buhar_perdesi", "b_pump", -2.0, -8.0, 5.5, -8.0, "ch5_steam"],
+	["b6_05_muhur_panosu", "b_ctrl", -8.0, -8.0, -15.5, -8.0],
 ]
 func _ready() -> void:
 	var level: Node = load("res://scenes/world/factory.tscn").instantiate()
@@ -46,6 +47,19 @@ func _ready() -> void:
 			for h in get_tree().get_nodes_in_group("hide_spots"):
 				if h.global_position.distance_to(Vector3(-13.3, 0, 15.3)) < 0.5:
 					h.interact(level.player)
+		elif s.size() > 6 and (s[6] == "ch5_start" or s[6] == "ch5_gas" or s[6] == "ch5_steam"):
+			GameManager.set_chapter(5)
+			GameManager.set_flag("ch4_done")
+			GameManager.set_flag("ch5_started")
+			var c7: Node = level.find_children("*", "Chapter5", false, false)[0]
+			c7._wait = false
+			InventoryManager.add_item("gas_meter")
+			c7._set_filters(2)
+			if s[6] == "ch5_gas":
+				c7._set_filter_left(18.0)
+				c7.exposure = 0.0
+			if s[6] == "ch5_steam":
+				c7._steam(true)
 		elif s.size() > 6 and s[6] == "ch4_ui":
 			GameManager.set_flag("ch3_done")
 			GameManager.set_chapter(4)

@@ -30,6 +30,20 @@ func _on_area(id: String, _n: String, counted: bool) -> void:
 		spawn()
 
 
+## Verilen konumda ve rotayla Sayıcı oluşturur (bölüm betikleri için, ör. bodrum kovalamacası).
+func spawn_at(pos: Vector3, waypoints: Array[Vector3]) -> Sayici:
+	if sayici != null and is_instance_valid(sayici):
+		sayici.queue_free()
+	sayici = Sayici.new()
+	factory.add_child(sayici)
+	sayici.player = factory.player
+	sayici.global_position = pos
+	sayici.caught.connect(_on_caught)
+	sayici.attack_started.connect(func(): AudioManager.say("Sayıcı kolunu kaldırıyor — kaç!", 1.5))
+	sayici.start_patrol(waypoints)
+	return sayici
+
+
 ## Sayıcı oyuncudan en uzak devriye noktasında başlar (sebepsiz karşılaşma yok).
 func spawn() -> void:
 	if sayici != null or factory.player == null:
@@ -103,28 +117,6 @@ func use_radio(radio: Node3D) -> bool:
 
 
 # ------------------------------------------------------------------ sahne
-func _hide_locker(pos: Vector3, exit_dir: Vector3) -> HideSpot:
-	var h := HideSpot.new()
-	h.position = pos
-	h.exit_offset = exit_dir
-	var mi := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = Vector3(0.7, 2.0, 0.7)
-	mi.mesh = bm
-	mi.material_override = _mat(Color(0.25, 0.3, 0.27))
-	mi.position.y = 1.0
-	h.add_child(mi)
-	var cs := CollisionShape3D.new()
-	var bs := BoxShape3D.new()
-	bs.size = Vector3(0.8, 2.0, 0.8)
-	cs.shape = bs
-	cs.position.y = 1.0
-	h.add_child(cs)
-	h.collision_layer = 5  # dünya + etkileşim (oyuncu içeri giremesin; saklanma ışınlama ile)
-	factory.add_child(h)
-	return h
-
-
 func _radio(pos: Vector3) -> void:
 	var r: CallbackInteractable = _spot(factory, pos, Vector3(0.3, 0.2, 0.15), Color(0.55, 0.3, 0.12), func(): return "Radyoyu aç (dikkat dağıt)", func(_p): pass)
 	r.action_fn = func(_p): use_radio(r)

@@ -97,3 +97,26 @@ func _fade(alpha: float, time: float) -> void:
 		add_child(layer)
 		_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	create_tween().tween_property(_overlay, "color:a", alpha, time)
+
+
+## Saklanma dolabı (HideSpot). exit_dir: dolaptan çıkış konumu (dolaba göre).
+func _hide_locker(pos: Vector3, exit_dir: Vector3) -> HideSpot:
+	var h := HideSpot.new()
+	h.position = pos
+	h.exit_offset = exit_dir
+	var mi := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(0.7, 2.0, 0.7)
+	mi.mesh = bm
+	mi.material_override = _mat(Color(0.25, 0.3, 0.27))
+	mi.position.y = 1.0
+	h.add_child(mi)
+	var cs := CollisionShape3D.new()
+	var bs := BoxShape3D.new()
+	bs.size = Vector3(0.8, 2.0, 0.8)
+	cs.shape = bs
+	cs.position.y = 1.0
+	h.add_child(cs)
+	h.collision_layer = 5  # dünya + etkileşim (oyuncu içeri giremesin; saklanma ışınlama ile)
+	factory.add_child(h)
+	return h

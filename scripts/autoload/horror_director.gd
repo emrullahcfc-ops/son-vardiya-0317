@@ -14,6 +14,7 @@ const EVENTS := {
 	"ev_door_slam": {"area": "g_maint", "min_chapter": 1, "boost": 0.25},
 	"ev_silhouette": {"area": "b_tunnel", "min_chapter": 1, "boost": 0.40},
 	"ev_voice_mimic": {"area": "", "min_chapter": 5, "boost": 0.3},
+	"ev_intercom": {"area": "b_ctrl", "min_chapter": 5, "boost": 0.3},
 	"ev_cant_woman": {"area": "u_cant", "min_chapter": 3, "boost": 0.35},
 }
 
