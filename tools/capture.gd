@@ -2,10 +2,10 @@ extends Node
 ## Gerçek oyun içi ekran görüntüsü alır: godot --path . res://tools/capture.tscn
 # [dosya, oda, durus_x, durus_z, bakis_x, bakis_z, (olay)]  — dünya koordinatları (metre)
 const SHOTS := [
-	["d7_01_tunel_hortum_jenerator", "b_tunnel", -2.0, -17.0, 0.0, -23.65, "ch7_state"],
-	["d7_02_tunel_devre_basinc", "b_tunnel", 1.0, -15.0, 5.65, -15.4, "ch7_state"],
-	["d7_03_muhurlu_alan_deliller", "b_sealed", -8.0, -13.0, -13.0, -19.0, "ch7_open"],
-	["d7_04_son_sayim", "b_sealed", -8.0, -13.0, -11.0, -18.0, "ch7_open"],
+	["e8_01_guvenlik_bilgisayari", "g_guard", -11.0, 11.5, -9.1, 14.9, "ch8_state"],
+	["e8_02_kopyalama", "g_guard", -11.0, 11.5, -9.1, 14.9, "ch8_copy"],
+	["e8_03_personel_defteri", "g_entry", 2.0, 11.0, 4.2, 14.8, "ch8_state"],
+	["e8_04_turnike_cikis", "g_entry", 1.0, 11.0, -1.8, 13.3, "ch8_state"],
 ]
 func _ready() -> void:
 	var level: Node = load("res://scenes/world/factory.tscn").instantiate()
@@ -37,6 +37,16 @@ func _ready() -> void:
 				GameManager.set_flag(f)
 			if s[6] == "ch7_open":
 				GameManager.set_flag("ch7_unsealed")
+		elif s.size() > 6 and (s[6] == "ch8_state" or s[6] == "ch8_copy"):
+			GameManager.set_chapter(8)
+			for f in ["ch4_done", "ch5_done", "ch6_done", "ch7_done", "final_route_open"]:
+				GameManager.set_flag(f)
+			InventoryManager.add_item("usb_drive")
+			var c9: Node = level.find_children("*", "Chapter8", false, false)[0]
+			c9._wait = false
+			if s[6] == "ch8_copy":
+				c9.decide_energy("backup")
+				c9.copy_progress = 11.0
 		elif s.size() > 6 and s[6] == "time_2004":
 			level.time_layers.instant = true
 			level.time_layers.switch_to("2004")

@@ -25,6 +25,10 @@ const QUESTS := {
 	"ch6_corridor": {"title": "Uzayan koridordan kaç ve şalteri indir", "main": true},
 	"ch7_unseal": {"title": "Bakım tüneli: hortum, jeneratör, devre ve basınçla Mühürlü Alan'ı aç", "main": true},
 	"ch7_evidence": {"title": "Mühürlü Alan'da delil topla: en az 6 isimlik, fotoğraf ve kaset", "main": true},
+	"ch8_escape": {"title": "Son sayım bitmeden çıkışa ulaş: bodrum → üretim → güvenlik kulübesi", "main": true},
+	"ch8_energy": {"title": "Güvenlik kulübesinde karar ver: delilleri USB'ye kopyala ya da elektriği kes", "main": true},
+	"ch8_ledger": {"title": "Giriş holündeki personel defterinde kararını ver", "main": true},
+	"ch8_exit": {"title": "Turnikeden geç ve çık", "main": true},
 	"ch2_floor_key": {"title": "Kat anahtarını al", "main": true},
 }
 
@@ -47,6 +51,11 @@ func complete_quest(quest_id: String) -> bool:
 	_completed.append(quest_id)
 	quest_completed.emit(quest_id)
 	return true
+
+
+## Aktif görevler, başlama sırasıyla (en yenisi sonda).
+func active_quests() -> Array[String]:
+	return _active.duplicate()
 
 
 func is_active(quest_id: String) -> bool:

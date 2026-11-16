@@ -58,6 +58,9 @@ func spawn() -> void:
 	sayici.global_position = far + Vector3(0, 0.05, 0)
 	sayici.caught.connect(_on_caught)
 	sayici.attack_started.connect(func(): AudioManager.say("Sayıcı kolunu kaldırıyor — kaç!", 1.5))
+	if GameManager.has_flag("final_route_open"):   # final devriyesi: daha hızlı, noktalarda daha uzun bekler (güvenli pencereler)
+		sayici.patrol_speed = 2.0
+		sayici.waypoint_pause = 4.0
 	sayici.start_patrol(ROUTE.duplicate())
 	_voice_t = 0.0
 
@@ -88,6 +91,7 @@ func _on_event(id: String) -> void:
 
 func _on_caught() -> void:
 	deaths += 1
+	GameManager.add_death()
 	factory.player.controls_enabled = false
 	AudioManager.play_sfx("door_slam")
 	AudioManager.say("Sayıcı seni saydı. Bir.", 2.5)

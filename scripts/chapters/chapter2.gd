@@ -281,6 +281,7 @@ func _on_caught() -> void:
 		return
 	chase_active = false
 	deaths += 1
+	GameManager.add_death()
 	factory.player.controls_enabled = false
 	AudioManager.play_sfx("door_slam")
 	AudioManager.say("Taklitçi seni yakaladı.", 2.5)

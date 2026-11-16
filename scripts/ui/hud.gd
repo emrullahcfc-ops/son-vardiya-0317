@@ -119,8 +119,11 @@ func _on_subtitle(text: String, duration: float) -> void:
 
 
 func _refresh_quest() -> void:
+	# Ekran dolmasın: yalnızca en yeni 4 aktif görev (eskiler bitmemiş kalsa bile).
 	var lines: Array[String] = []
-	for id in QuestManager.QUESTS:
-		if QuestManager.is_active(id):
-			lines.append("▸ " + QuestManager.QUESTS[id]["title"])
+	var act := QuestManager.active_quests()
+	for i in range(maxi(0, act.size() - 4), act.size()):
+		lines.append("▸ " + QuestManager.QUESTS[act[i]]["title"])
+	if act.size() > 4:
+		lines.append("  (+%d eski görev)" % (act.size() - 4))
 	_quest.text = "\n".join(lines)

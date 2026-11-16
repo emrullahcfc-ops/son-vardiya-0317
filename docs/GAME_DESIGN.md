@@ -46,7 +46,8 @@ A (6+ işçi, kayıtlar, yedek) · B (delil yetersiz, kaçış) · C (defteri im
 | 14 | İki zaman durumu altyapısı (2026/2004) | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
 | 15 | Bölüm 6: 03.17 Vardiyası | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
 | 16 | Bölüm 7: Betonun Arkası | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
-| 17+ | Bölüm 8, finaller, cila, build | ⏳ |
+| 17 | Bölüm 8: Son Sayım (final kaçışı, enerji kararı) | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
+| 18+ | Dört final çözümleyici, menü, cila, build | ⏳ |
 
 ## Ürün riskleri
 - Sanat ve ses üretimi: tüm modeller şu an geçici; Steam için sanatçı/varlık paketi gerekir.
@@ -172,3 +173,15 @@ Kod: `scripts/chapters/chapter7.gd`, veri `scripts/data/evidence_data.gd`. Böl�
 - **Son sayım ve final rotası:** ≥6 isimlik + fotoğraf + kaset (alan açıkken) tamamlanınca Sayıcı toplanan isimlikleri tek tek sayar, sonunda "Murat Demir. Sayım tamam." Ardından `ch7_done`, `final_route_open`, `final_metrics` (isimlik sayısı, delil, kaset, fotoğraf, Yusuf seçimi) yazılır ve **Bölüm 8**'e geçilir (Aşama 17). Final ölçütleri Aşama 18'in son çözümleyicisine girdi olacaktır.
 - **Sınırlar:** Mühürlü Alan şimdilik sade (isimlikler yerde, masalar kutu); beton görseli yok (kapı kilidi ve notla anlatılır); Sayıcı sayımda yalnızca altyazı + efekt.
 - **Düzeltilen hata:** kayıttan yüklenince JSON sayıları ondalık (1.0) geliyordu; hortum (Bölüm 7) ve fan sırası (Bölüm 5) dizileri bu yüzden eşleşmiyordu (kayıttan sonra bulmaca tamamlanamıyordu). İki dizi de tam sayıya normalize edildi, regresyon testleri eklendi.
+
+## Bölüm 8: Son Sayım (Aşama 17)
+Kod: `scripts/chapters/chapter8.gd`, final girdisi `scripts/data/final_input.gd`. Bölüm 7'nin son sayımı bitince başlar.
+- **Kaçış rotası:** Mühürlü Alan → bakım tüneli/pompa/boru → bodrum inişi ve merdiven → C Hattı → B Hattı → personel kapısı → giriş holü / güvenlik kulübesi → turnike (navmesh yolu ≈66 m). Kapılar kilitsiz; saklanma dolapları (5) ve radyolar yol boyunca.
+- **Sayıcı final devriyesi:** daha hızlı (2,0 m/sn; normal 1,6) ve noktalarda 4 sn bekler → turnike çevresinde güvenli pencereler. Testte 180 sn'de 3 pencere (Sayıcı >12 m uzakta, ≥15 sn; en uzun 42 sn) ve 3 geçiş ölçüldü. Sessiz oyuncuyu sebepsiz fark etmez.
+- **Karar 1 — Enerji (güvenlik bilgisayarı):** (a) **USB'ye kopyala:** 25 sn, terminalin 6 m yakınında kal (uzaklaşınca duraklar, ilerleme kaybolmaz), ekranda %; Sayıcı sesi duyar ve terminale gelir → dolapta saklanarak (kulübe dolabı menzilde) ya da kaçarak tamamlanır; yakalanınca kontrol noktası, kopyalama sıfırlanır. USB yoksa seçilemez. (b) **Elektriği hemen kes:** ışıklar kısılır, Sayıcı susar, yedek alınmaz. Karar bir kez verilir.
+- **Karar 2 — Personel defteri (giriş holü masası):** enerji kararı gerekir. **İmzala / Kapat / Rapor bırak**. Rapor, yedek (USB) varsa eksiksiz, yoksa eksik (uyarı verir).
+- **Karar 3 — Turnike:** kararlar tamamlanmadan kilitli. Sayıcı "on bir... on ikinci sensin" der: **kabul et / yanlış sayımı reddet**. Sonra çıkış: `ch8_done`, `ending_pending`.
+- **Final çözümleyiciye aktarım (`FinalInput.build()` → `flags["final_input"]`):** işçi kimliği (0–11), delil toplamı ve kategorileri (isimlik, ayakkabı, iz, fotoğraf), Yusuf kayıtları (0–4: Bölüm 4 kaset, Bölüm 5 onay, Bölüm 6 telefon, Bölüm 7 kaset), özel belgeler (0–2: Nuray'ın muhasebe defteri, Cemal'in imzasız bakım iptali — Arşiv'de isteğe bağlı), Yusuf seçimi (expose/protect), USB/yedek, enerji, defter, eksiksiz rapor, sayım cevabı, toplam ölüm. Aşama 18 yalnızca bu sözlüğü okuyacaktır.
+- **12 yol:** enerji (2) × defter (3) × sayım (2) = 12 yolun tamamı testte bitişe ulaşır ve doğru girdi üretir.
+- **Diğer değişiklikler:** ölüm sayacı `GameManager.deaths_total` (kontrol noktası yüklemesinde geri sarılmaz, kayda yazılır). HUD'da görev listesi en yeni 4 aktif görevle sınırlandı ("+N eski görev").
+- **Sınırlar:** bitişte henüz sinematik/son yok (Aşama 18); Sayıcı'nın turnike sayımı yalnızca altyazı + seçim penceresi; kopyalama görseli yalnızca yüzde yazısı.

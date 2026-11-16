@@ -8,7 +8,8 @@ signal noise_made(pos: Vector3, radius: float, source: String)  # düşmanların
 const TIME_STATES := ["2026", "2004"]
 signal time_state_changed(state: String)
 var time_state := "2026"      # mekânın o anki zaman durumu (kayıtta saklanır)
-var save_blocked := false     # zaman geçişi sürerken kayıt alınmaz (tutarlılık)
+var save_blocked := false
+var deaths_total := 0         # toplam ölüm (kontrol noktası yüklemesinden etkilenmez; kayda yazılır)     # zaman geçişi sürerken kayıt alınmaz (tutarlılık)
 
 var debug_ai := false  # F6: düşman durumunu ekranda göster
 
@@ -59,6 +60,10 @@ func set_time_state(state: String) -> bool:
 	return true
 
 
+func add_death() -> void:
+	deaths_total += 1
+
+
 func has_flag(id: String) -> bool:
 	return flags.get(id, false) != false
 
@@ -100,11 +105,12 @@ func enter_area(area_id: String, area_name: String, counted: bool = true) -> voi
 
 
 func to_save_data() -> Dictionary:
-	return {"chapter": current_chapter, "flags": flags, "visited": visited_areas.duplicate(), "checkpoint": checkpoint_pos.duplicate(), "time": time_state}
+	return {"chapter": current_chapter, "flags": flags, "visited": visited_areas.duplicate(), "checkpoint": checkpoint_pos.duplicate(), "time": time_state, "deaths": deaths_total}
 
 
 func from_save_data(d: Dictionary) -> void:
 	current_chapter = int(d.get("chapter", 1))
+	deaths_total = maxi(deaths_total, int(d.get("deaths", 0)))   # ölüm sayısı geri sarılmaz
 	var ts := String(d.get("time", "2026"))
 	time_state = ts if TIME_STATES.has(ts) else "2026"
 	flags = d.get("flags", {})

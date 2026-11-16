@@ -24,6 +24,7 @@ godot --headless --fixed-fps 60 --path . --script tests/run_chapter5_tests.gd
 godot --headless --fixed-fps 60 --path . --script tests/run_time_tests.gd
 godot --headless --fixed-fps 60 --path . --script tests/run_chapter6_tests.gd
 godot --headless --fixed-fps 60 --path . --script tests/run_chapter7_tests.gd
+godot --headless --fixed-fps 60 --path . --script tests/run_chapter8_tests.gd
 ```
 
 Tasarım ve yol haritası: [docs/GAME_DESIGN.md](docs/GAME_DESIGN.md)

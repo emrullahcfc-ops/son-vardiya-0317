@@ -32,6 +32,8 @@ var suspicion := 0.0
 var last_known := Vector3.ZERO
 var route: Array[Vector3] = []
 var hide_check_chance := 0.5   # aramada dolabı kontrol etme olasılığı
+var patrol_speed := SPEED_PATROL   # final devriyesi biraz hızlıdır
+var waypoint_pause := WAYPOINT_PAUSE
 var chase_speed := SPEED_CHASE   # senaryolar yavaşlatabilir (ör. uzayan koridor)
 var hold_time := 0.0           # >0: pusuda bekler (ses taklidi)
 var sees_now := false
@@ -180,9 +182,9 @@ func _patrol(delta: float) -> float:
 	_agent.target_position = route[_wp]
 	if _agent.is_navigation_finished() or Vector2(global_position.x - route[_wp].x, global_position.z - route[_wp].z).length() < 0.9:
 		_wp = (_wp + 1) % route.size()
-		_pause = WAYPOINT_PAUSE
+		_pause = waypoint_pause
 		return 0.0
-	return SPEED_PATROL
+	return patrol_speed
 
 
 func _search(delta: float) -> float:

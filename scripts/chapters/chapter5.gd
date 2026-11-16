@@ -137,6 +137,7 @@ func collapse() -> void:
 		return
 	_dead = true
 	deaths += 1
+	GameManager.add_death()
 	factory.player.controls_enabled = false
 	AudioManager.say("Gaz seni yere serdi. Kontrol noktasına dönüyorsun.", 3.0)
 	collapsed.emit()

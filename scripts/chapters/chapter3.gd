@@ -64,6 +64,12 @@ func give_worker(worker_id: String) -> bool:
 	return true
 
 
+## Özel belge: bayrak olarak kayda geçer (kaybolmaz); gizli son girdisidir.
+func special_doc(flag: String, text: String) -> void:
+	GameManager.set_flag(flag)
+	AudioManager.say(text, 9.0)
+
+
 func _on_item(item_id: String) -> void:
 	if item_id.begins_with("worker_id_"):
 		if WorkerData.collected_count(InventoryManager) >= WorkerData.REQUIRED_FOR_MAIN and not GameManager.has_flag("ch3_ids_done"):
@@ -189,6 +195,9 @@ func _build_props() -> void:
 	_worker_spot(Vector3(-12.2, Y + 0.95, 0.0), "Dosya: C. Erdem", "cemal")
 	_worker_spot(Vector3(-11.2, Y + 0.95, 0.0), "Dosya: H. Taş", "huseyin")
 
+	# --- Arşiv: iki özel belge (gizli son için isteğe bağlı)
+	_spot(factory, Vector3(-15.6, Y + 1.4, 4.0), Vector3(0.1, 0.4, 0.4), Color(0.8, 0.78, 0.6), func(): return "Oku: Nuray'ın muhasebe defteri", func(_p): special_doc("doc_nuray", "Nuray'ın muhasebe defteri: maaş pusulalarında on ikinci bir satır var. Adı yok, yalnızca '03.17' yazılı. Her ay ödeme yapılmış."))
+	_spot(factory, Vector3(-15.6, Y + 1.4, 5.2), Vector3(0.1, 0.4, 0.4), Color(0.78, 0.75, 0.62), func(): return "Oku: Cemal'in imzasız bakım iptali", func(_p): special_doc("doc_cemal", "Cemal Erdem'in imzasız bakım iptali: 'Bakım yapılmazsa fanlar çalışmaz. Ben imzalamıyorum.' Altında başka bir elden onay: Y. Demir."))
 	# --- Personel bürosu: Yusuf'un kartı
 	_box(factory, Vector3(0.0, Y + 0.45, 3.0), Vector3(2.4, 0.9, 1.0), Color(0.3, 0.25, 0.2))
 	_doc(Vector3(-0.7, Y + 0.93, 3.0), "Sayım defteri", "Vardiya sayımı: on bir isim yazılı, on ikinci satır boş bırakılmış. Altında: 'Y. Demir onayladı.'")
