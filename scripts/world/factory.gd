@@ -12,6 +12,7 @@ var player: CharacterBody3D
 var doors: Array = []
 var _mats: Dictionary = {}
 var _tp_index := -1
+var _ev_index := -1
 
 
 func _ready() -> void:
@@ -22,6 +23,11 @@ func _ready() -> void:
 		_build_ramp(rp)
 	_build_doors()
 	_spawn_player()
+	var fx := HorrorEffects.new()
+	fx.factory = self
+	add_child(fx)
+	AudioManager.start_layer("hum", -30.0)
+	AudioManager.start_layer("wind", -34.0)
 	QuestManager.start_quest("ch1_enter_factory")
 
 
@@ -41,6 +47,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		KEY_F3:
 			if test_mode:
 				teleport_step(-1)
+		KEY_F4:
+			if test_mode:  # korku olaylarını sırayla oynat (cooldown yok sayılır)
+				var ids: Array = HorrorDirector.EVENTS.keys()
+				_ev_index = (_ev_index + 1) % ids.size()
+				HorrorDirector.force_fire(ids[_ev_index])
 
 
 func teleport_step(dir: int) -> void:
@@ -251,6 +262,9 @@ func _add_light(room: Dictionary) -> void:
 	l.omni_range = maxf(b[2] - b[0], b[3] - b[1]) * 0.85
 	l.light_energy = 2.2
 	l.light_color = Color(0.85, 0.9, 1.0) if room["f"] != "B" else Color(0.7, 0.85, 0.75)
+	l.add_to_group("room_light")
+	l.set_meta("room_id", room["id"])
+	l.set_meta("base_energy", l.light_energy)
 	add_child(l)
 
 

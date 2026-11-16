@@ -35,7 +35,7 @@ A (6+ işçi, kayıtlar, yedek) · B (delil yetersiz, kaçış) · C (defteri im
 | 03 | Etkileşim, kapı, belge | ✅ kod hazır, elle oynama testi bekliyor |
 | 04 | Envanter, görev, kayıt | ✅ otomatik testlerle doğrulandı |
 | 05 | Fabrika blokları (19 alan, 3 kat) | ✅ otomatik testlerle doğrulandı; elle oynama testi bekliyor |
-| 06 | Atmosfer, ses, korku olayları | ⏳ (HorrorDirector iskeleti var) |
+| 06 | Atmosfer, ses, korku olayları | ✅ otomatik testlerle doğrulandı; kulakla/gözle deneme bekliyor |
 | 07+ | Bölümler 1–8, düşmanlar, finaller, cila, build | ⏳ |
 
 ## Ürün riskleri
@@ -51,3 +51,10 @@ Veri: `scripts/world/factory_layout.gd`. Üretici: `scripts/world/factory.gd`. A
 - Mühürlü Alan kapısı şimdilik kilitsiz; Bölüm 7'de kilitlenecek.
 - Test modu: **F2/F3** ile alanlar arasında ışınlanma, ekranda "(n/19 alan)" sayacı.
 - Şu an her şey gri kutu; sanat geçişi Aşama 20.
+
+## Atmosfer ve korku olayları (Aşama 6)
+- **Ses:** `AudioManager` telifsiz, sentetik sesler üretir (kapı çarpması, anons zili, vızıltı, boğuk vuruş, fısıltı) ve döngülü ortam katmanları çalar (uğultu, rüzgâr). Kanallar: Master, SFX, Ambient (ayarlardan ayrı ayrı kısılır). Gerçek ses dosyaları Aşama 20'de eklenir.
+- **Olay motoru:** `HorrorDirector.EVENTS` alana bağlı olayları tanımlar. Kurallar: tek seferlik, 20 sn genel bekleme, en erken bölüm koşulu, kayıtta korunur. `intensity` (0–1) her olayla artar, zamanla düşer; ortam uğultusunun sesini sürer.
+- **Etkiler:** `HorrorEffects` olayları uygular: ışık titremesi (B Hattı), anons (A Hattı), kapı çarpması (Bakım), siluet (Bakım Tüneli).
+- **Erişilebilirlik:** `flash_reduction` açıkken ışık titremesi hızlı yanıp sönmez (adımlar ≥ 0,3 sn, ani değişim ≤ %50); siluet yavaş solar.
+- **Test modu:** **F4** olayları sırayla oynatır (bekleme süresini yok sayar).

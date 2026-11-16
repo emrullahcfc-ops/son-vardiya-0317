@@ -19,6 +19,8 @@ var settings: Dictionary = {
 	"subtitle_size": 1.0,
 	"flash_reduction": true,
 	"master_volume": 1.0,
+	"sfx_volume": 1.0,
+	"ambient_volume": 1.0,
 }
 
 
