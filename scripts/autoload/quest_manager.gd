@@ -6,6 +6,7 @@ signal quest_completed(quest_id: String)
 
 const QUESTS := {
 	"ch1_enter_factory": {"title": "Fabrikaya gir", "main": true},
+	"ch1_booth_key": {"title": "Güvenlik kulübesinin anahtarını bul", "main": true},
 	"ch1_power_staff_door": {"title": "Personel kapısının enerjisini aç", "main": true},
 	"ch1_find_door_code": {"title": "Kapı kodunu bul", "main": false},
 }

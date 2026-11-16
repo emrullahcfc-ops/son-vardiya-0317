@@ -6,6 +6,8 @@ extends Interactable
 @export var door_id: String = ""
 @export var required_item: String = ""   # boşsa kilitsiz
 @export var consume_key: bool = false
+@export var required_flag: String = ""   # bayrak yoksa kilitli (ör. enerji + kod)
+@export var locked_hint: String = "Kilitli."
 @export var open_angle: float = 100.0
 @export var size: Vector3 = Vector3(1.0, 2.1, 0.1)
 
@@ -41,7 +43,7 @@ func _ready() -> void:
 func get_prompt() -> String:
 	if is_open:
 		return "Kapıyı kapat"
-	if required_item != "" and not InventoryManager.has_item(required_item):
+	if _is_locked():
 		return "Kilitli"
 	return "Kapıyı aç"
 
@@ -55,10 +57,19 @@ func _do_interact(player: Node) -> bool:
 		var name: String = InventoryManager.ITEMS.get(required_item, {}).get("name", "bir anahtar")
 		AudioManager.say("Kilitli. %s gerekiyor." % name, 2.5)
 		return false
+	if required_flag != "" and not GameManager.has_flag(required_flag):
+		AudioManager.say(locked_hint, 3.0)
+		return false
 	if required_item != "" and consume_key:
 		InventoryManager.consume_item(required_item)
 	_open()
 	return true
+
+
+func _is_locked() -> bool:
+	if required_item != "" and not InventoryManager.has_item(required_item):
+		return true
+	return required_flag != "" and not GameManager.has_flag(required_flag)
 
 
 func _open() -> void:

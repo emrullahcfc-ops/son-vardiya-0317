@@ -26,6 +26,9 @@ func _ready() -> void:
 	var fx := HorrorEffects.new()
 	fx.factory = self
 	add_child(fx)
+	var ch1 := Chapter1.new()
+	ch1.factory = self
+	add_child(ch1)
 	AudioManager.start_layer("hum", -30.0)
 	AudioManager.start_layer("wind", -34.0)
 	QuestManager.start_quest("ch1_enter_factory")
@@ -242,6 +245,9 @@ func _build_doors() -> void:
 		var door := Door.new()
 		door.door_id = "d%02d" % i
 		door.size = Vector3(w, FactoryLayout.DOOR_H, 0.1)
+		door.required_item = d.get("req_item", "")
+		door.required_flag = d.get("req_flag", "")
+		door.locked_hint = d.get("hint", "Kilitli.")
 		var y0 := FactoryLayout.floor_y(d["f"])
 		var c: float = d["c"]
 		var p: float = d["p"]

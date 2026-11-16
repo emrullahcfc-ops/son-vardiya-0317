@@ -45,9 +45,9 @@ const ROOMS := [
 # open=true: kapı düğümü yok, geniş açıklık.
 const DOORS := [
 	{"f": "G", "a": "g_out", "b": "g_entry", "axis": "z", "c": 16, "p": 0},
-	{"f": "G", "a": "g_guard", "b": "g_entry", "axis": "x", "c": -6, "p": 12},
+	{"f": "G", "a": "g_guard", "b": "g_entry", "axis": "x", "c": -6, "p": 12, "req_item": "key_security_booth"},
 	{"f": "G", "a": "g_entry", "b": "g_load", "axis": "x", "c": 6, "p": 12},
-	{"f": "G", "a": "g_entry", "b": "g_lineB", "axis": "z", "c": 8, "p": 0},
+	{"f": "G", "a": "g_entry", "b": "g_lineB", "axis": "z", "c": 8, "p": 0, "req_flag": "ch1_staff_unlocked", "hint": "Personel kapısı. Elektronik kilit: enerji ve kod gerekiyor."},
 	{"f": "G", "a": "g_lineA", "b": "g_guard", "axis": "z", "c": 8, "p": -10},
 	{"f": "G", "a": "g_lineC", "b": "g_load", "axis": "z", "c": 8, "p": 11},
 	{"f": "G", "a": "g_lineA", "b": "g_lineB", "axis": "x", "c": -6, "p": 2},

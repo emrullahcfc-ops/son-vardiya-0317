@@ -36,7 +36,8 @@ A (6+ işçi, kayıtlar, yedek) · B (delil yetersiz, kaçış) · C (defteri im
 | 04 | Envanter, görev, kayıt | ✅ otomatik testlerle doğrulandı |
 | 05 | Fabrika blokları (19 alan, 3 kat) | ✅ otomatik testlerle doğrulandı; elle oynama testi bekliyor |
 | 06 | Atmosfer, ses, korku olayları | ✅ otomatik testlerle doğrulandı; kulakla/gözle deneme bekliyor |
-| 07+ | Bölümler 1–8, düşmanlar, finaller, cila, build | ⏳ |
+| 07 | Bölüm 1: Giriş ve Güvenlik | ✅ otomatik testlerle doğrulandı; baştan sona elle oynama bekliyor |
+| 08+ | Bölümler 2–8, düşmanlar, finaller, cila, build | ⏳ |
 
 ## Ürün riskleri
 - Sanat ve ses üretimi: tüm modeller şu an geçici; Steam için sanatçı/varlık paketi gerekir.
@@ -58,3 +59,11 @@ Veri: `scripts/world/factory_layout.gd`. Üretici: `scripts/world/factory.gd`. A
 - **Etkiler:** `HorrorEffects` olayları uygular: ışık titremesi (B Hattı), anons (A Hattı), kapı çarpması (Bakım), siluet (Bakım Tüneli).
 - **Erişilebilirlik:** `flash_reduction` açıkken ışık titremesi hızlı yanıp sönmez (adımlar ≥ 0,3 sn, ani değişim ≤ %50); siluet yavaş solar.
 - **Test modu:** **F4** olayları sırayla oynatır (bekleme süresini yok sayar).
+
+## Bölüm 1: Giriş ve Güvenlik (Aşama 7)
+Kod: `scripts/chapters/chapter1.gd` (Chapter1), `scripts/interact/keypad.gd`, `callback_interactable.gd`.
+Akış: yağmurlu dış alan + araç → Hakan telefonu (zil + altyazı) → Giriş: kulübe anahtarı (masada) → Güvenlik: ölçü aleti, vardiya defteri, durmuş saat (03.17), sigorta panosu (1. etkileşim: voltaj ölçümü 0 V, 2.: şalter) → Giriş: tuş takımı (kod **0317**, enerji gerekir, sınırsız deneme) → personel kapısı → üretim hattına girince 03.17 anonsu, Bölüm 2'ye geçiş, otomatik kontrol noktası.
+- **12. siluet:** 11 işçi panosu yalnızca enerji açıkken ve ilk incelemede 12. karartılı çerçeveyi ve "12. — Murat Demir" satırını gösterir; ardından Hakan'ın ikinci telefonu gelir.
+- **Softlock yok:** tüm eşyalar kilitsiz bölgelerde; yanlış kod serbestçe tekrar denenir; anahtar/ölçü aleti kritik eşyadır, kaybolmaz.
+- **Kilit verisi:** `FactoryLayout.DOORS` içinde `req_item` (eşya) ve `req_flag` (bayrak) anahtarları.
+- Bilinen eksik: turnike şimdilik dekor (etkileşimsiz); gerçek ses/ses oyunculuğu yok.

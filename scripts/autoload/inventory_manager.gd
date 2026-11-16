@@ -9,6 +9,7 @@ const ITEMS := {
 	"key_security_booth": {"name": "Güvenlik kulübesi anahtarı", "critical": true, "desc": "Güvenlik kulübesinin kapısını açar."},
 	"floor_key": {"name": "Kat anahtarı", "critical": true, "desc": "Personel katının kapısını açar."},
 	"worker_id_ayse": {"name": "Ayşe'nin kimliği", "critical": true, "desc": "11 işçiden biri."},
+	"multimeter": {"name": "Ölçü aleti", "critical": true, "desc": "Gerilim ölçer."},
 	"usb_drive": {"name": "USB bellek", "critical": true, "desc": "Delilleri kopyalamak için."},
 }
 

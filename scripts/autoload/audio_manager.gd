@@ -155,6 +155,40 @@ func _synth(sound: String) -> AudioStreamWAV:
 				var t := float(i) / RATE
 				lp += (rng.randf_range(-1, 1) - lp) * 0.25
 				d[i] = lp * 0.5 * sin(PI * t / 1.8) * (0.6 + 0.4 * sin(TAU * 6.0 * t))
+		"phone":
+			n = int(RATE * 2.2)
+			d.resize(n)
+			for i in n:
+				var t := float(i) / RATE
+				var on := fmod(t, 1.1) < 0.45
+				d[i] = (sin(TAU * 440.0 * t) + sin(TAU * 480.0 * t)) * 0.2 * (1.0 if on else 0.0)
+		"beep":
+			n = int(RATE * 0.15)
+			d.resize(n)
+			for i in n:
+				var t := float(i) / RATE
+				d[i] = sin(TAU * 1200.0 * t) * 0.3 * (1.0 - t / 0.15)
+		"error":
+			n = int(RATE * 0.35)
+			d.resize(n)
+			for i in n:
+				var t := float(i) / RATE
+				d[i] = (1.0 if sin(TAU * 150.0 * t) > 0.0 else -1.0) * 0.25 * (1.0 - t / 0.35)
+		"click":
+			n = int(RATE * 0.06)
+			d.resize(n)
+			for i in n:
+				d[i] = rng.randf_range(-1, 1) * 0.5 * (1.0 - float(i) / n)
+		"rain":
+			loop = true
+			n = RATE * 4
+			d.resize(n)
+			var lp3 := 0.0
+			for i in n:
+				var x := rng.randf_range(-1, 1)
+				lp3 += (x - lp3) * 0.3
+				var fade := minf(1.0, minf(float(i), float(n - i)) / (RATE * 0.1))
+				d[i] = (x - lp3) * 0.5 * fade
 		"hum":
 			loop = true
 			n = RATE * 3
