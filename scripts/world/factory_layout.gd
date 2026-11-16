@@ -50,7 +50,7 @@ const DOORS := [
 	{"f": "G", "a": "g_entry", "b": "g_lineB", "axis": "z", "c": 8, "p": 0, "req_flag": "ch1_staff_unlocked", "hint": "Personel kapısı. Elektronik kilit: enerji ve kod gerekiyor."},
 	{"f": "G", "a": "g_lineA", "b": "g_guard", "axis": "z", "c": 8, "p": -10},
 	{"f": "G", "a": "g_lineC", "b": "g_load", "axis": "z", "c": 8, "p": 11},
-	{"f": "G", "a": "g_lineA", "b": "g_lineB", "axis": "x", "c": -6, "p": 2},
+	{"f": "G", "a": "g_lineA", "b": "g_lineB", "axis": "x", "c": -6, "p": 2, "open": true},
 	{"f": "G", "a": "g_lineB", "b": "g_lineC", "axis": "x", "c": 6, "p": 2},
 	{"f": "G", "a": "g_lineB", "b": "g_maint", "axis": "z", "c": -4, "p": 0, "req_flag": "ch2_machines_on", "hint": "Bakım kapısı kilitli. Hatlar çalışınca kilit düşer."},
 	{"f": "G", "a": "g_stairU", "b": "g_lineA", "axis": "x", "c": -16, "p": -1, "req_item": "floor_key"},

@@ -106,6 +106,7 @@ func _run() -> void:
 	var pl: Node = level.player
 	var ch: Node = level.find_children("*", "Chapter2", false, false)[0]
 	ch._wait = false
+	ch.chase_enabled = false
 	gm.set_flag("ch1_done")
 	gm.set_chapter(2)
 
@@ -197,6 +198,7 @@ func _run() -> void:
 	_check(inv.has_item("floor_key"), "kat anahtarı korunur")
 	var again: Node = load("res://scenes/world/factory.tscn").instantiate()
 	root.add_child(again)
+	again.find_children("*", "Chapter2", false, false)[0].chase_enabled = false
 	await physics_frame
 	_check(_pickup(again, "floor_key") == null, "alınan anahtar tekrar çıkmaz")
 	_check(_door(again, "d09").get_prompt() != "Kilitli", "bakım kapısı yüklemeden sonra açık kalır")

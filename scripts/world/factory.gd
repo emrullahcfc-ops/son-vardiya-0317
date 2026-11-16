@@ -32,6 +32,7 @@ func _ready() -> void:
 	var ch2 := Chapter2.new()
 	ch2.factory = self
 	add_child(ch2)
+	_build_navigation()
 	AudioManager.start_layer("hum", -30.0)
 	AudioManager.start_layer("wind", -34.0)
 	QuestManager.start_quest("ch1_enter_factory")
@@ -42,6 +43,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	match event.keycode:
 		KEY_F5:
+			if player:
+				GameManager.set_checkpoint(player.global_position, player.rotation.y)
 			SaveManager.save_game()
 			AudioManager.say("Kaydedildi.", 1.5)
 		KEY_F9:
@@ -58,6 +61,67 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				var ids: Array = HorrorDirector.EVENTS.keys()
 				_ev_index = (_ev_index + 1) % ids.size()
 				HorrorDirector.force_fire(ids[_ev_index])
+
+
+## Kontrol noktasına dön (ölümden sonra): kaydı yükle, oyuncuyu kayıtlı konuma koy.
+func respawn_player() -> void:
+	SaveManager.load_game()
+	if GameManager.checkpoint_pos.size() == 4 and player:
+		var cp: Array = GameManager.checkpoint_pos
+		player.global_position = Vector3(cp[0], cp[1], cp[2])
+		player.rotation.y = float(cp[3])
+		player.velocity = Vector3.ZERO
+		player.controls_enabled = true
+
+
+# ---------------------------------------------------------------- yol ağı (NavigationMesh)
+var nav_region: NavigationRegion3D
+
+
+func _build_navigation() -> void:
+	_tag_nav_geometry(self)
+	nav_region = NavigationRegion3D.new()
+	var nm := NavigationMesh.new()
+	nm.cell_size = 0.125
+	nm.cell_height = 0.125
+	nm.agent_radius = 0.375
+	nm.agent_height = 1.75
+	nm.agent_max_climb = 0.25
+	nm.agent_max_slope = 40.0
+	nm.geometry_parsed_geometry_type = NavigationMesh.PARSED_GEOMETRY_STATIC_COLLIDERS
+	nm.geometry_source_geometry_mode = NavigationMesh.SOURCE_GEOMETRY_GROUPS_EXPLICIT
+	nm.geometry_source_group_name = &"nav_geo"
+	nm.geometry_collision_mask = 1
+	NavigationServer3D.map_set_cell_size(get_world_3d().navigation_map, 0.125)
+	NavigationServer3D.map_set_cell_height(get_world_3d().navigation_map, 0.125)
+	nav_region.navigation_mesh = nm
+	add_child(nav_region)
+	nav_region.bake_navigation_mesh(false)
+	_push_nav()
+	nav_region.bake_finished.connect(_push_nav)
+
+
+## Bake sonucunu sunucuya iletir (kaynağı yeniden atamak güncellemeyi tetikler).
+func _push_nav() -> void:
+	var m := nav_region.navigation_mesh
+	nav_region.navigation_mesh = null
+	nav_region.navigation_mesh = m
+
+
+## Kapılar yola dahil edilmez (düşman kapıyı açar); diğer sabit gövdeler yol ağını keser.
+func _tag_nav_geometry(n: Node) -> void:
+	for c in n.get_children():
+		if c is StaticBody3D and not (c is Door) and not c.is_in_group("player"):
+			c.add_to_group("nav_geo")
+		_tag_nav_geometry(c)
+
+
+func rebake_navigation() -> void:
+	if nav_region:
+		_tag_nav_geometry(self)
+		# Eşzamanlı: iş parçacıklı bake sonucu güvenilir uygulanmıyor. ~0,3 sn; kepenk darbesiyle örtüşür.
+		nav_region.bake_navigation_mesh(false)
+		_push_nav()
 
 
 func teleport_step(dir: int) -> void:
@@ -97,6 +161,10 @@ func _spawn_player() -> void:
 	add_child(player)
 	var start := FactoryLayout.room(FactoryLayout.START_ROOM)
 	player.global_position = FactoryLayout.room_center(start) + Vector3(0, 0.15, 2.0)
+	if GameManager.checkpoint_pos.size() == 4:
+		var cp: Array = GameManager.checkpoint_pos
+		player.global_position = Vector3(cp[0], cp[1], cp[2])
+		player.rotation.y = float(cp[3])
 	var hud := CanvasLayer.new()
 	hud.set_script(HUD_SCRIPT)
 	add_child(hud)

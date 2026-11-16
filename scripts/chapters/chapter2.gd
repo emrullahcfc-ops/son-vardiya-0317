@@ -13,14 +13,32 @@ var _machines: Dictionary = {}  # hat -> MeshInstance3D
 var _cabinet: Node
 var _wait := true  # final altyazıları gerçek zamanlı beklesin (testte false)
 
+# --- Taklitçi kovalamacası (Aşama 9)
+var chase_enabled := true      # testte kapatılabilir
+var chase_active := false
+var activate_delay := 1.5      # oyuncu bakım odasından çıktıktan sonra Taklitçi'nin uyanma gecikmesi
+var dormant_timeout := 10.0    # oyuncu çıkmasa da uyanma süresi
+var deaths := 0
+var mimic: Mimic
+var shutter: Shutter
+var _overlay: ColorRect
+var _lever: Node
+
+signal player_died
+signal chase_succeeded
+
 
 func _ready() -> void:
 	_build_props()
 	GameManager.chapter_changed.connect(func(c): if c >= 2: _begin())
 	InventoryManager.item_added.connect(_on_item)
+	GameManager.area_entered.connect(_on_area)
 	if GameManager.current_chapter >= 2:
 		_begin()
 	_restore()
+	# Kontrol noktasından yüklenince (ölüm / F9) bitmemiş kovalamaca yeniden başlar.
+	if GameManager.has_flag("ch2_done") and not GameManager.has_flag("ch2_chase_done") and chase_enabled:
+		get_tree().create_timer(2.0).timeout.connect(start_chase)
 
 
 func _begin() -> void:
@@ -110,7 +128,9 @@ func _on_item(item_id: String) -> void:
 		GameManager.set_flag("ch2_done")
 		_complete("ch2_floor_key")
 		AudioManager.say("Kat anahtarını aldın. Merdivendeki kapı artık açılır.", 4.0)
-		SaveManager.save_game()  # kontrol noktası
+		_checkpoint()  # kontrol noktası
+		if chase_enabled:
+			get_tree().create_timer(1.5).timeout.connect(start_chase)
 
 
 func _restore() -> void:
@@ -175,3 +195,124 @@ func _build_props() -> void:
 	factory.add_child(kp)
 	kp.unlocked.connect(_on_cabinet_open)
 	_cabinet = kp
+	# Güvenlik kepengi: B Hattı ↔ A Hattı geçidi (x=-6, z=2). Kol A Hattı tarafında.
+	shutter = Shutter.new()
+	shutter.position = Vector3(-6.1, 0.0, 2.0)
+	factory.add_child(shutter)
+	_lever = _spot(factory, Vector3(-6.3, 1.3, 3.6), Vector3(0.1, 0.5, 0.3), Color(0.7, 0.2, 0.1), func(): return "Kepenk kolunu çek", func(_p): pull_lever())
+	shutter.state_changed.connect(func(down: bool): if down: factory.rebake_navigation())
+
+
+# ------------------------------------------------------------------ Taklitçi kovalamacası
+func _on_area(id: String, _n: String, _c: bool) -> void:
+	if not chase_active or mimic == null or not is_instance_valid(mimic):
+		return
+	if id == "g_lineB" and mimic.state == Mimic.State.DORMANT:
+		get_tree().create_timer(activate_delay).timeout.connect(_activate_mimic)
+	elif id == "g_stairU" and shutter.is_down:
+		succeed()
+
+
+func _activate_mimic() -> void:
+	if chase_active and mimic and is_instance_valid(mimic):
+		mimic.activate()
+
+
+## Senaryo: kat anahtarı alınınca bakım odasının köşesinde Taklitçi belirir. Oyuncu odadan çıkınca uyanır.
+## Kaçış: B Hattı ile A Hattı arasındaki geçide kepenk kolu çekip kepengi indirmek.
+func start_chase() -> void:
+	if chase_active or GameManager.has_flag("ch2_chase_done") or factory.player == null:
+		return
+	chase_active = true
+	shutter.set_state_instant(false)
+	for d in factory.doors:
+		if d.door_id == "d09":
+			d.force_open()  # çıkış garanti: bakım kapısı açık
+	QuestManager.start_quest("ch2_escape")
+	AudioManager.say("Işıklar titredi. Odanın köşesinde biri duruyor.", 4.0)
+	_pulse_lights()
+	mimic = Mimic.new()
+	factory.add_child(mimic)
+	mimic.global_position = Vector3(5.0, 0.05, -11.0)
+	mimic.player = factory.player
+	mimic.caught.connect(_on_caught)
+	mimic.gave_up.connect(succeed)
+	AudioManager.play_sfx("thump", mimic.global_position)
+	get_tree().create_timer(dormant_timeout).timeout.connect(_activate_mimic)
+
+
+func pull_lever() -> void:
+	if not shutter.is_down:
+		var blockers: Array = [factory.player]
+		if mimic and is_instance_valid(mimic):
+			blockers.append(mimic)
+		if not shutter.lower(blockers):
+			AudioManager.say("Geçitte biri var.", 2.0)
+			return
+		AudioManager.play_sfx("door_slam", shutter.global_position)
+		AudioManager.say("Kepenk indi!", 2.0)
+	elif not chase_active:
+		shutter.raise()
+		AudioManager.say("Kepenk kalktı.", 2.0)
+		factory.rebake_navigation()
+	else:
+		AudioManager.say("Kepenk zaten inik.", 1.5)
+
+
+func succeed() -> void:
+	if not chase_active:
+		return
+	chase_active = false
+	GameManager.set_flag("ch2_chase_done")
+	_complete("ch2_escape")
+	if mimic and is_instance_valid(mimic):
+		mimic.retreat()
+		var m := mimic
+		var tw := create_tween()
+		tw.tween_interval(2.0)
+		tw.tween_callback(m.queue_free)
+	AudioManager.play_sfx("whisper", factory.player.global_position)
+	AudioManager.say("Taklitçi geri çekildi. Üst kata çıkabilirsin.", 4.0)
+	_checkpoint()
+	chase_succeeded.emit()
+
+
+func _on_caught() -> void:
+	if not chase_active:
+		return
+	chase_active = false
+	deaths += 1
+	factory.player.controls_enabled = false
+	AudioManager.play_sfx("door_slam")
+	AudioManager.say("Taklitçi seni yakaladı.", 2.5)
+	player_died.emit()
+	_fade(1.0, 1.0)
+	await get_tree().create_timer(2.0).timeout
+	if not is_inside_tree():
+		return
+	_cleanup_chase()
+	factory.respawn_player()  # kontrol noktası: kaydı yükler, oyuncuyu yerine koyar
+	_fade(0.0, 0.8)
+	get_tree().create_timer(2.0).timeout.connect(start_chase)
+
+
+func _cleanup_chase() -> void:
+	if mimic and is_instance_valid(mimic):
+		mimic.queue_free()
+	mimic = null
+	if shutter.is_down:
+		shutter.set_state_instant(false)
+		factory.rebake_navigation()
+
+
+func _fade(alpha: float, time: float) -> void:
+	if _overlay == null:
+		var layer := CanvasLayer.new()
+		layer.layer = 50
+		_overlay = ColorRect.new()
+		_overlay.color = Color(0, 0, 0, 0)
+		_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		layer.add_child(_overlay)
+		add_child(layer)
+		_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	create_tween().tween_property(_overlay, "color:a", alpha, time)

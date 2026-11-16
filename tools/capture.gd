@@ -2,11 +2,9 @@ extends Node
 ## Gerçek oyun içi ekran görüntüsü alır: godot --path . res://tools/capture.tscn
 # [dosya, oda, durus_x, durus_z, bakis_x, bakis_z, (olay)]  — dünya koordinatları (metre)
 const SHOTS := [
-	["b2_01_hat_b_makine", "g_lineB", -3.0, 0.0, 2.5, 4.0],
-	["b2_02_cizelge", "g_lineB", -3.0, 0.5, -3.0, -3.7],
-	["b2_03_hat_a_dilekce", "g_lineA", -9.0, 1.5, -13.2, -2.2],
-	["b2_04_makineler_calisiyor", "g_lineB", -3.0, 0.0, 2.5, 4.0, "ch2_run"],
-	["b2_05_bakim_dolap", "g_maint", 0.0, -7.0, -5.3, -8.0],
+	["b2_06_taklitci_bakim", "g_maint", -4.5, -8.0, 5.0, -11.0, "ch2_mimic"],
+	["b2_07_taklitci_yakin", "g_maint", 0.5, -6.0, 5.0, -11.0, "ch2_mimic_near"],
+	["b2_08_kepenk_inik", "g_lineA", -9.0, 3.0, -6.1, 2.0, "ch2_shutter"],
 ]
 func _ready() -> void:
 	var level: Node = load("res://scenes/world/factory.tscn").instantiate()
@@ -20,6 +18,17 @@ func _ready() -> void:
 		if s.size() > 6 and s[6] == "ch1_photo":
 			GameManager.set_flag("ch1_power_on")
 			level.find_children("*", "Chapter1", false, false)[0].photo_board()
+		elif s.size() > 6 and (s[6] == "ch2_mimic" or s[6] == "ch2_mimic_near"):
+			GameManager.set_chapter(2)
+			var c3: Node = level.find_children("*", "Chapter2", false, false)[0]
+			c3.chase_enabled = false
+			if c3.mimic == null:
+				c3.start_chase()
+			if s[6] == "ch2_mimic_near":
+				c3.mimic.global_position = Vector3(2.0, 0.05, -9.0)
+		elif s.size() > 6 and s[6] == "ch2_shutter":
+			var c4: Node = level.find_children("*", "Chapter2", false, false)[0]
+			c4.shutter.set_state_instant(true)
 		elif s.size() > 6 and s[6] == "ch2_run":
 			GameManager.set_chapter(2)
 			var c2: Node = level.find_children("*", "Chapter2", false, false)[0]

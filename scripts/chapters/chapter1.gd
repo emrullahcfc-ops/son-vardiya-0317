@@ -107,7 +107,7 @@ func finish_chapter() -> void:
 	AudioManager.play_sfx("chime")
 	AudioManager.say("[Anons] Saat 03.17. Vardiya başlıyor. On iki kişi sayılacak.", 5.0)
 	GameManager.set_chapter(2)
-	SaveManager.save_game()  # kontrol noktası: Bölüm 2 geçişi kayıtla korunur
+	_checkpoint()  # kontrol noktası: Bölüm 2 geçişi kayıtla korunur
 	if ring_time > 0.0:
 		await get_tree().create_timer(5.4).timeout
 		if is_inside_tree():

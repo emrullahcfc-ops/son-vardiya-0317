@@ -6,6 +6,7 @@ var _subtitle: Label
 var _quest: Label
 var _fps: Label
 var _area: Label
+var _stam: ColorRect
 var _sub_timer: SceneTreeTimer
 var _player: Node
 
@@ -40,6 +41,12 @@ func _ready() -> void:
 	_quest.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_quest.grow_horizontal = Control.GROW_DIRECTION_END
 	_quest.position = Vector2(16, 48)
+	_stam = ColorRect.new()
+	_stam.color = Color(0.85, 0.85, 0.8, 0.7)
+	root.add_child(_stam)
+	_stam.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
+	_stam.position = Vector2(20, -30)
+	_stam.size = Vector2(160, 6)
 	GameManager.area_entered.connect(_on_area)
 	AudioManager.subtitle.connect(_on_subtitle)
 	QuestManager.quest_started.connect(func(_i): _refresh_quest())
@@ -65,6 +72,9 @@ func _make_label(parent: Control, preset: int, size: int) -> Label:
 
 func _process(_d: float) -> void:
 	_fps.text = "%d FPS" % Engine.get_frames_per_second()
+	if _player and "stamina" in _player:
+		_stam.size.x = 160.0 * _player.stamina
+		_stam.color = Color(0.9, 0.4, 0.3, 0.8) if _player.exhausted else Color(0.85, 0.85, 0.8, 0.7)
 	var t: Node = _player.current_target if _player else null
 	_prompt.text = ("[E] " + t.get_prompt()) if (t and t.has_method("get_prompt")) else ""
 	_subtitle.add_theme_font_size_override("font_size", int(20 * float(GameManager.settings.get("subtitle_size", 1.0))))

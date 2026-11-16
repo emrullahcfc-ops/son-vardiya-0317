@@ -5,6 +5,14 @@ extends Node
 var factory: Node3D
 
 
+## Kontrol noktası: oyuncunun konumu + kayıt.
+func _checkpoint() -> void:
+	var p := factory.get("player") as Node3D if factory else null
+	if p:
+		GameManager.set_checkpoint(p.global_position, p.rotation.y)
+	SaveManager.save_game()
+
+
 func _complete(quest_id: String) -> void:
 	if not QuestManager.is_active(quest_id) and not QuestManager.is_completed(quest_id):
 		QuestManager.start_quest(quest_id)

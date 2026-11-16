@@ -19,6 +19,7 @@ var _shape: CollisionShape3D
 
 
 func _ready() -> void:
+	add_to_group("doors")
 	_base_y = rotation.y
 	var box := BoxMesh.new()
 	box.size = size
@@ -64,6 +65,13 @@ func _do_interact(player: Node) -> bool:
 		InventoryManager.consume_item(required_item)
 	_open()
 	return true
+
+
+## Düşman gibi sistemler kilidi yok sayıp kapıyı açar.
+func force_open() -> void:
+	if is_open:
+		return
+	_open()
 
 
 func _is_locked() -> bool:

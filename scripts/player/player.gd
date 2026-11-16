@@ -20,6 +20,13 @@ var crouching := false
 var controls_enabled := true
 var current_target: Node = null
 
+const STAMINA_DRAIN := 0.22   # saniyede (≈4,5 sn koşu)
+const STAMINA_REGEN := 0.15
+const STAMINA_RESUME := 0.35  # yorulunca bu seviyeye gelmeden koşulamaz
+
+var stamina := 1.0
+var exhausted := false
+
 signal target_changed(target: Node)
 
 
@@ -50,7 +57,9 @@ func _physics_process(delta: float) -> void:
 		_update_crouch(delta)
 		var dir_in := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 		var dir := (transform.basis * Vector3(dir_in.x, 0, dir_in.y)).normalized()
-		var speed := CROUCH_SPEED if crouching else (SPRINT_SPEED if Input.is_action_pressed("sprint") else WALK_SPEED)
+		var sprinting := Input.is_action_pressed("sprint") and not crouching and not exhausted and dir_in != Vector2.ZERO
+		_update_stamina(delta, sprinting)
+		var speed := CROUCH_SPEED if crouching else (SPRINT_SPEED if sprinting else WALK_SPEED)
 		velocity.x = move_toward(velocity.x, dir.x * speed, 30.0 * delta)
 		velocity.z = move_toward(velocity.z, dir.z * speed, 30.0 * delta)
 	else:
@@ -59,6 +68,17 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	_update_target()
+
+
+func _update_stamina(delta: float, sprinting: bool) -> void:
+	if sprinting:
+		stamina = maxf(0.0, stamina - STAMINA_DRAIN * delta)
+		if stamina <= 0.0:
+			exhausted = true
+	else:
+		stamina = minf(1.0, stamina + STAMINA_REGEN * delta)
+		if exhausted and stamina >= STAMINA_RESUME:
+			exhausted = false
 
 
 func _update_crouch(delta: float) -> void:

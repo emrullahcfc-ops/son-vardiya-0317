@@ -12,6 +12,7 @@ var current_chapter: int = 1
 var flags: Dictionary = {}  # tekil durum bayrakları: id -> bool/değer
 var visited_areas: Array[String] = []  # ziyaret edilen ana alanlar
 var current_area_id: String = ""
+var checkpoint_pos: Array = []  # [x, y, z, yaw]; boşsa başlangıç noktası
 var settings: Dictionary = {
 	"mouse_sensitivity": 0.0025,
 	"fov": 75.0,
@@ -30,6 +31,10 @@ func _ready() -> void:
 
 func set_flag(id: String, value: Variant = true) -> void:
 	flags[id] = value
+
+
+func set_checkpoint(pos: Vector3, yaw: float) -> void:
+	checkpoint_pos = [pos.x, pos.y, pos.z, yaw]
 
 
 func has_flag(id: String) -> bool:
@@ -73,12 +78,13 @@ func enter_area(area_id: String, area_name: String, counted: bool = true) -> voi
 
 
 func to_save_data() -> Dictionary:
-	return {"chapter": current_chapter, "flags": flags, "visited": visited_areas.duplicate()}
+	return {"chapter": current_chapter, "flags": flags, "visited": visited_areas.duplicate(), "checkpoint": checkpoint_pos.duplicate()}
 
 
 func from_save_data(d: Dictionary) -> void:
 	current_chapter = int(d.get("chapter", 1))
 	flags = d.get("flags", {})
+	checkpoint_pos = d.get("checkpoint", []).duplicate() if d.get("checkpoint", []) is Array else []
 	visited_areas.clear()
 	for id in d.get("visited", []):
 		visited_areas.append(String(id))

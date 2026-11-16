@@ -38,7 +38,8 @@ A (6+ işçi, kayıtlar, yedek) · B (delil yetersiz, kaçış) · C (defteri im
 | 06 | Atmosfer, ses, korku olayları | ✅ otomatik testlerle doğrulandı; kulakla/gözle deneme bekliyor |
 | 07 | Bölüm 1: Giriş ve Güvenlik | ✅ otomatik testlerle doğrulandı; baştan sona elle oynama bekliyor |
 | 08 | Bölüm 2: Üretim Hattı | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
-| 09+ | Taklitçi düşman, Bölümler 3–8, finaller, cila, build | ⏳ |
+| 09 | Taklitçi düşman ve ilk kovalamaca | ✅ otomatik testlerle doğrulandı; elle oynama ve süre/denge ayarı bekliyor |
+| 10+ | Bölümler 3–8, Sayıcı, finaller, cila, build | ⏳ |
 
 ## Ürün riskleri
 - Sanat ve ses üretimi: tüm modeller şu an geçici; Steam için sanatçı/varlık paketi gerekir.
@@ -76,3 +77,12 @@ Kod: `scripts/chapters/chapter2.gd` (ortak yardımcılar: `chapter_base.gd`).
 - **Final:** üç hat eşzamanlı çalışır (makine sesi, ışık nefesi, anons); bakım kapısının kilidi düşer. Dolaptan **kat anahtarı** alınır, bölüm biter ve kayıt alınır; merdiven kapısı artık açılır (kat anahtarı ister).
 - Kilit verisi: `FactoryLayout.DOORS` `req_flag` (bakım kapısı: `ch2_machines_on`) ve `req_item` (merdiven: `floor_key`).
 - Not: Bölüm 3'e (Personel Katı) geçiş Aşama 10'da; şimdilik `ch2_done` bayrağı ve kayıt var.
+
+## Taklitçi ve ilk kovalamaca (Aşama 9)
+Kod: `scripts/enemy/mimic.gd`, `scripts/world/shutter.gd`, kovalamaca mantığı `chapter2.gd` (alt kısım).
+- **Taklitçi:** koyu, gözleri parlayan insan siluetli düşman. `NavigationAgent3D` ile yol bulur; yol ağı fabrika kurulurken koddan üretilir (`factory.gd` → `_build_navigation`). Görüş: 22 m, 120° koni, duvar/kapı engeli. Durumlar: uyku → kovalama → (4 sn görmezse) arama (son bilinen konum, 5 sn) → vazgeçme. Hız 3,6 m/sn; oyuncu 3,0 yürür, 5,5 koşar. Kapıları açar (kilidi yok sayar), duvardan geçmez, ışınlanmaz, yakalayınca (1 m) ölüm.
+- **Dayanıklılık:** oyuncu ~4,5 sn koşabilir, yorulunca 0,35'e dolana kadar koşamaz; ekranda sol altta ince çubuk. Böylece koşmak kaçış aracı ama sınırsız değil.
+- **Senaryo:** kat anahtarını alınca (kontrol noktası kaydı) bakım odasının köşesinde Taklitçi uyanmadan belirir. Oyuncu odadan çıkınca 1,5 sn sonra (ya da 10 sn sonra) kovalamaca başlar. Kaçış: A Hattı tarafındaki **kepenk kolunu** çekmek; kepenk B↔A geçidini kapatır, yol ağı yeniden hesaplanır, Taklitçi dolaşmak zorunda kalır; kepenk inikken merdiven alanına ulaşınca (ya da Taklitçi aramayı bırakınca) kaçış tamamlanır.
+- **Ölüm ve tekrar:** yakalanınca ekran kararır, kontrol noktası yüklenir (oyuncu dolabın başında), kovalamaca baştan başlar; sınırsız tekrar. F5/F9 artık konumu da kaydeder.
+- **Adillik:** Taklitçi başta uyur; çıkış kapısı senaryoda zorla açık; koşan oyuncu kola vardığında Taklitçi testte 14 m geride; kepenk geçitteki oyuncuya inmez.
+- **Bilinen sınırlar:** tipik kovalamaca ~25–35 sn (hedef 45–60 sn): oyuncu testi sonrası mesafe/hız ayarlanacak. Kepenk inerken yol ağı yeniden hesaplanır (~0,3 sn küçük takılma). Taklitçi şimdilik sadece Bölüm 2'de; merdiveni kullanmaz davranışı Aşama 12'de (Sayıcı) genişler.
