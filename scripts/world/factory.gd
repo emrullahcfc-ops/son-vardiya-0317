@@ -29,6 +29,9 @@ func _ready() -> void:
 	var ch1 := Chapter1.new()
 	ch1.factory = self
 	add_child(ch1)
+	var ch4 := Chapter4.new()
+	ch4.factory = self
+	add_child(ch4)
 	var ch3 := Chapter3.new()
 	ch3.factory = self
 	add_child(ch3)

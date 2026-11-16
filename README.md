@@ -17,6 +17,7 @@ godot --headless --path . --script tests/run_horror_tests.gd
 godot --headless --path . --script tests/run_chapter1_tests.gd
 godot --headless --path . --script tests/run_chapter2_tests.gd
 godot --headless --path . --script tests/run_chapter3_tests.gd
+godot --headless --path . --script tests/run_chapter4_tests.gd
 godot --headless --fixed-fps 60 --path . --script tests/run_enemy_tests.gd
 ```
 

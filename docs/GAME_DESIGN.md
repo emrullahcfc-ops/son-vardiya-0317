@@ -40,7 +40,8 @@ A (6+ işçi, kayıtlar, yedek) · B (delil yetersiz, kaçış) · C (defteri im
 | 08 | Bölüm 2: Üretim Hattı | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
 | 09 | Taklitçi düşman ve ilk kovalamaca | ✅ otomatik testlerle doğrulandı; elle oynama ve süre/denge ayarı bekliyor |
 | 10 | Bölüm 3: Personel Katı | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
-| 11+ | Bölümler 4–8, Sayıcı, finaller, cila, build | ⏳ |
+| 11 | Bölüm 4: CCTV ve delil zaman çizelgesi | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
+| 12+ | Sayıcı, Bölümler 5–8, finaller, cila, build | ⏳ |
 
 ## Ürün riskleri
 - Sanat ve ses üretimi: tüm modeller şu an geçici; Steam için sanatçı/varlık paketi gerekir.
@@ -101,3 +102,12 @@ Kod: `scripts/chapters/chapter3.gd`, işçi verisi `scripts/data/worker_data.gd`
 - **Kilit:** altı kimlikle personel bürosunun üç kapısı açılır (`ch3_ids_done`).
 - **Yusuf'un kartı ve sayım:** büroda kartı alınca Sayıcı 1'den 12'ye sayar; 12. satırda "On ikinci isim yazılı: Murat Demir." Bölüm 4'e geçiş ve kayıt.
 - **Kapsam notu:** 8 işçinin "dosyası" şimdilik kısa biyografi (kimlik başına tek paragraf); uzun belgeler/ses Aşama 19'da (diyalog/belge/yerelleştirme).
+
+## Bölüm 4: CCTV ve delil zaman çizelgesi (Aşama 11)
+Kod: `scripts/chapters/chapter4.gd`, `scripts/ui/cctv_ui.gd`, veri `scripts/data/cctv_data.gd`.
+- **Monitör:** Kamera Odası'ndaki masada. Bölüm 3 bitince (Yusuf'un kartı) açılır. Arayüzde 6 kamera seçilir (Giriş, A/B/C Hattı, Kamera Odası, Bodrum Pompa); her biri sahneyi gerçekten görür (SubViewport; yalnızca seçili kamera çizilir). Kamera yeşili ton ve zaman damgası vardır.
+- **Klipler:** "önceden kaydedilmiş" 7 klip, kısa sahnelemeyle (figürler yürür, altyazılı). 3 kritik: **03.14** (B Hattı, bakım iptali), **03.16** (Pompa, Selim vanaya uzanır, Yusuf durdurur), **03.17** (Giriş, anons, 11 işçi personel kapısına yürür). 4 yanıltıcı rutin klip.
+- **İşaretleme:** oyuncu kritik üç klibi 03.14 → 03.16 → 03.17 sırasıyla işaretler. İzlemeden işaretlenmez; ilgisiz klip reddedilir; yanlış sırada işaretler sıfırlanır ve tekrar denenir. İlerleme kayıtla korunur.
+- **Canlı kamera korkusu:** K5 (kamera odası) canlı izlenirken, en az bir kritik klip işaretlendiyse sandalyenin arkasında siluet + anons belirir (bir kez); ekran değişince siluet silinir, "Arkana bakıyorsun. Kimse yok."
+- **Tamamlanınca:** USB belleğe kopyalanır, **Selim–Yusuf ses kaydı** (6 satır altyazı) çalar, görev güncellenir: "Bodruma in: kontrol odasındaki mühür panosunu bul"; Bölüm 5'e geçilir ve kayıt alınır.
+- **Sınırlar:** klipler sahnelemedir (gerçek video yok); ses kaydı yalnızca altyazı + efekt (ses oyunculuğu yok); figürler düz silüet.

@@ -2,11 +2,10 @@ extends Node
 ## Gerçek oyun içi ekran görüntüsü alır: godot --path . res://tools/capture.tscn
 # [dosya, oda, durus_x, durus_z, bakis_x, bakis_z, (olay)]  — dünya koordinatları (metre)
 const SHOTS := [
-	["b3_01_soyunma_dolaplari", "u_dress", -11.0, 10.5, -11.0, 15.2],
-	["b3_02_yemekhane_corba", "u_cant", 0.0, 9.5, 0.0, 12.5, "ch3_soup"],
-	["b3_03_revir_dolap", "u_infirm", 9.0, 11.0, 15.5, 12.5],
-	["b3_04_arsiv_dosyalar", "u_arch", -9.0, 3.0, -13.0, 0.0],
-	["b3_05_buro_yusuf_karti", "u_office", 0.0, 6.5, 0.6, 3.0],
+	["b4_01_kamera_odasi", "u_cam", 8.5, 2.0, 15.0, 2.0],
+	["b4_02_monitor_b_hatti_0314", "u_cam", 8.5, 2.0, 15.0, 2.0, "ch4_ui", "k3", "c_0314"],
+	["b4_03_monitor_giris_0317", "u_cam", 8.5, 2.0, 15.0, 2.0, "ch4_ui", "k1", "c_0317"],
+	["b4_04_monitor_pompa_0316", "u_cam", 8.5, 2.0, 15.0, 2.0, "ch4_ui", "k6", "c_0316"],
 ]
 func _ready() -> void:
 	var level: Node = load("res://scenes/world/factory.tscn").instantiate()
@@ -31,6 +30,15 @@ func _ready() -> void:
 		elif s.size() > 6 and s[6] == "ch2_shutter":
 			var c4: Node = level.find_children("*", "Chapter2", false, false)[0]
 			c4.shutter.set_state_instant(true)
+		elif s.size() > 6 and s[6] == "ch4_ui":
+			GameManager.set_flag("ch3_done")
+			GameManager.set_chapter(4)
+			var c6: Node = level.find_children("*", "Chapter4", false, false)[0]
+			c6._wait = false
+			if c6.ui == null:
+				c6.open_monitor()
+			c6.ui.select_camera(s[7])
+			c6.ui.play(s[8])
 		elif s.size() > 6 and s[6] == "ch3_soup":
 			var c5: Node = level.find_children("*", "Chapter3", false, false)[0]
 			c5.soup()
@@ -43,5 +51,7 @@ func _ready() -> void:
 		elif s.size() > 6:
 			HorrorDirector.force_fire(s[6])
 		for _i in 20: await get_tree().process_frame
+		if s.size() > 6 and s[6] == "ch4_ui":
+			for _j in 25: await get_tree().process_frame
 		get_viewport().get_texture().get_image().save_png("res://docs/img/%s.png" % s[0])
 	get_tree().quit()

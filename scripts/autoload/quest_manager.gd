@@ -15,6 +15,8 @@ const QUESTS := {
 	"ch3_collect_ids": {"title": "Altı işçinin kimliğini topla", "main": true},
 	"ch3_infirmary_code": {"title": "Revirin ilaç dolabının kodunu bul", "main": false},
 	"ch3_yusuf_card": {"title": "Personel bürosunda Yusuf'un kartını bul", "main": true},
+	"ch4_mark_evidence": {"title": "Kamera kayıtlarını saat sırasına göre işaretle", "main": true},
+	"ch4_basement": {"title": "Bodruma in: kontrol odasındaki mühür panosunu bul", "main": true},
 	"ch2_floor_key": {"title": "Kat anahtarını al", "main": true},
 }
 

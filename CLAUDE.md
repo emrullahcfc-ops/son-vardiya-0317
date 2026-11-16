@@ -22,6 +22,7 @@ godot --headless --path . --script tests/run_horror_tests.gd
 godot --headless --path . --script tests/run_chapter1_tests.gd
 godot --headless --path . --script tests/run_chapter2_tests.gd
 godot --headless --path . --script tests/run_chapter3_tests.gd
+godot --headless --path . --script tests/run_chapter4_tests.gd
 godot --headless --fixed-fps 60 --path . --script tests/run_enemy_tests.gd
 ```
 Godot: `Godot_v4.7.2-stable_win64_console.exe` (winget ile kurulu).
@@ -29,7 +30,7 @@ Godot: `Godot_v4.7.2-stable_win64_console.exe` (winget ile kurulu).
 ## Mimari
 - Autoload: GameManager, SaveManager, QuestManager, InventoryManager, AudioManager, HorrorDirector (`scripts/autoload/`).
 - Korku: `HorrorDirector` karar verir, `scripts/horror/horror_effects.gd` uygular; sesler `AudioManager`da sentezlenir.
-- Bölümler: `scripts/chapters/` (`ChapterBase` ortak yardımcılar, `Chapter1`–`Chapter3`); işçi verisi `scripts/data/worker_data.gd`. Kapı kilitleri `FactoryLayout.DOORS` içinde `req_item`/`req_flag`.
+- Bölümler: `scripts/chapters/` (`ChapterBase` ortak yardımcılar, `Chapter1`–`Chapter4`, arayüz `scripts/ui/cctv_ui.gd`); işçi verisi `scripts/data/worker_data.gd`. Kapı kilitleri `FactoryLayout.DOORS` içinde `req_item`/`req_flag`.
 - Düşman: `scripts/enemy/mimic.gd` (NavigationAgent3D; yol ağı `factory.gd` içinde koddan bake edilir, kepenk inince yeniden). `scripts/world/shutter.gd`.
 - Oyuncu: `scenes/player/player.tscn`, `scripts/player/player.gd`.
 - Etkileşim: `Interactable` tabanı → `Door`, `Pickup`, `Document` (`scripts/interact/`).
