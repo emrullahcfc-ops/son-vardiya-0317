@@ -43,7 +43,8 @@ A (6+ işçi, kayıtlar, yedek) · B (delil yetersiz, kaçış) · C (defteri im
 | 11 | Bölüm 4: CCTV ve delil zaman çizelgesi | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
 | 12 | Sayıcı AI ve saklanma | ✅ otomatik testlerle doğrulandı; elle oynama ve denge ayarı bekliyor |
 | 13 | Bölüm 5: Gaz ve havalandırma | ✅ otomatik testlerle doğrulandı; elle oynama ve denge ayarı bekliyor |
-| 14+ | İki zaman durumu, Bölümler 6–8, finaller, cila, build | ⏳ |
+| 14 | İki zaman durumu altyapısı (2026/2004) | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
+| 15+ | Bölümler 6–8, finaller, cila, build | ⏳ |
 
 ## Ürün riskleri
 - Sanat ve ses üretimi: tüm modeller şu an geçici; Steam için sanatçı/varlık paketi gerekir.
@@ -135,3 +136,12 @@ Kod: `scripts/chapters/chapter5.gd`. Ortak yardımcılar `chapter_base.gd` (sakl
 - **Sayıcı kovalamacası:** fanlar bitince pompa odasına girince Sayıcı bodrum merdiveninden iner ve kovalar. Kaçış: pompadaki **buhar vanası** (kapıda 12 sn buhar perdesi görüşü keser, hareketi engellemez; vision katmanı 16) + **saklanma dolapları** (pompa, kontrol). Sayıcı aramayı bırakınca geri çekilir. Yakalanınca fan kontrol noktasına dönülür, kovalamaca yeniden başlar.
 - **Mühür panosu:** kontrol odasında. Fanlar + kovalamaca bitmeden ve Yusuf'un kartı olmadan çalışmaz. Kartla **Yusuf elektronik onayı** + **interkom kadın sesi** ("Sen on ikincisin"); Bölüm 6'ya geçiş ve kayıt. Kontrol odasına girince `ev_intercom` olayı da çalar.
 - **Sınırlar:** gaz görseli yok (yalnızca ekran göstergesi ve uyarılar); buhar basit parçacık; ses oyunculuğu yok; Sayıcı'nın bodrum rotası tek senaryo (devriye bodrumda sürmez).
+
+## İki zaman durumu: 2026 / 2004 (Aşama 14)
+Kod: `scripts/world/time_layers.gd` (TimeLayers), `scripts/interact/card_reader.gd`; durum `GameManager.time_state` (kayıtta saklanır).
+- **Ortak geometri:** duvar, zemin, tavan, rampa ve kapı konumları iki zamanda da aynıdır. Fark yalnızca katmanlardadır.
+- **Katmanlar:** `TimeLayers.register(düğüm, durum)` bir düğümü yalnızca o zamanda var sayar (görünürlük + çarpışma + etkileşim). Işık/ortam: 2004 sıcak, parlak ve seyrek sisli; 2026 soğuk ve loş (geçişte birebir geri gelir). Kapı: `Door.only_in_state`. Eşya/etkileşim: `Interactable.time_state_required`. NPC: `spawn_npc` (2004'te çalışan işçi siluetleri). Duruma özel engel: 2026'da B Hattı'nda çökmüş tavan molozu (2004'te yok).
+- **Kontrollü geçiş (kart okuyucu):** B Hattı kuzey duvarında. Bölüm 5 bitince (`ch5_done`) enerjilenir; Yusuf'un kartını okutunca 2026 ⇄ 2004 geçer. Enerji ya da kart yoksa çalışmaz; geçiş sırasında ve 3 sn bekleme süresinde tekrar basılamaz.
+- **Güvenlik:** geçişte ekran kararır, durum değişir, oyuncu yeni katmanın engelinin içindeyse en yakın boş ve zeminli konuma taşınır (halka araması; yedek: son güvenli konum). Yüklemede kontrol noktası engel içindeyse de aynı düzeltme uygulanır. Geçiş sürerken kayıt kilitlidir (yarım durum yazılmaz).
+- **Kayıt:** zaman durumu kayda yazılır; yeni sahne kayıtlı durumun katmanlarıyla açılır.
+- **Bilinen sınırlar:** dünyada şimdilik yalnızca örnek katman içeriği var (moloz, 3 işçi, ışık); Bölüm 6–7 kendi 2004/2026 içeriğini bu sisteme kaydeder. Navigasyon ağı 2026 hâliyle üretilir (2004'te moloz yeri düşmanlar için kapalı kalır; zararsız).

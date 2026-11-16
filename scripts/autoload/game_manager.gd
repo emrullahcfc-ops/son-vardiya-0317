@@ -5,6 +5,11 @@ signal chapter_changed(chapter_id: int)
 signal settings_changed
 signal noise_made(pos: Vector3, radius: float, source: String)  # düşmanların duyabileceği sesler
 
+const TIME_STATES := ["2026", "2004"]
+signal time_state_changed(state: String)
+var time_state := "2026"      # mekânın o anki zaman durumu (kayıtta saklanır)
+var save_blocked := false     # zaman geçişi sürerken kayıt alınmaz (tutarlılık)
+
 var debug_ai := false  # F6: düşman durumunu ekranda göster
 
 const SETTINGS_PATH := "user://settings.json"
@@ -43,6 +48,15 @@ func set_checkpoint(pos: Vector3, yaw: float) -> void:
 ## Ses olayı: yarıçap içindeki düşmanlar duyabilir.
 func make_noise(pos: Vector3, radius: float, source: String = "") -> void:
 	noise_made.emit(pos, radius, source)
+
+
+func set_time_state(state: String) -> bool:
+	if not TIME_STATES.has(state):
+		return false
+	if state != time_state:
+		time_state = state
+		time_state_changed.emit(state)
+	return true
 
 
 func has_flag(id: String) -> bool:
@@ -86,11 +100,13 @@ func enter_area(area_id: String, area_name: String, counted: bool = true) -> voi
 
 
 func to_save_data() -> Dictionary:
-	return {"chapter": current_chapter, "flags": flags, "visited": visited_areas.duplicate(), "checkpoint": checkpoint_pos.duplicate()}
+	return {"chapter": current_chapter, "flags": flags, "visited": visited_areas.duplicate(), "checkpoint": checkpoint_pos.duplicate(), "time": time_state}
 
 
 func from_save_data(d: Dictionary) -> void:
 	current_chapter = int(d.get("chapter", 1))
+	var ts := String(d.get("time", "2026"))
+	time_state = ts if TIME_STATES.has(ts) else "2026"
 	flags = d.get("flags", {})
 	checkpoint_pos = d.get("checkpoint", []).duplicate() if d.get("checkpoint", []) is Array else []
 	visited_areas.clear()

@@ -3,6 +3,7 @@ extends SceneTree
 ## Autoload'lar --script modunda otomatik yüklenmez; kök sahneye elle ekliyoruz.
 
 var failures: Array[String] = []
+var finished := false
 
 
 func _check(cond: bool, name: String) -> void:
@@ -31,6 +32,8 @@ func _initialize() -> void:
 			root.add_child(node)
 	await process_frame
 	_run()
+	if not finished:
+		failures.append("test sonuna ulaşılamadı (çalışma hatası)")
 	print("")
 	if failures.is_empty():
 		print("TÜM TESTLER GEÇTİ")
@@ -99,3 +102,4 @@ func _run() -> void:
 	root.add_child(inst)
 	_check(inst.get_child_count() > 5, "sahne düğümleri oluştu")
 	inst.queue_free()
+	finished = true

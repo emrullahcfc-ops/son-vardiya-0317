@@ -6,6 +6,7 @@ extends StaticBody3D
 @export var one_shot: bool = false
 
 var used := false
+var time_state_required := ""   # boş: her zaman; "2004"/"2026": yalnızca o zaman durumunda kullanılabilir
 
 
 func _init() -> void:
@@ -17,6 +18,8 @@ func get_prompt() -> String:
 
 
 func interact(player: Node) -> void:
+	if time_state_required != "" and GameManager.time_state != time_state_required:
+		return
 	if one_shot and used:
 		return
 	if _do_interact(player):

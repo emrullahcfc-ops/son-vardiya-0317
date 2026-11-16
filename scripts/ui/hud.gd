@@ -8,6 +8,7 @@ var _fps: Label
 var _area: Label
 var _stam: ColorRect
 var _debug: Label
+var _time: Label
 var _sub_timer: SceneTreeTimer
 var _player: Node
 
@@ -50,6 +51,13 @@ func _ready() -> void:
 	_stam.offset_right = 180
 	_stam.offset_top = -30
 	_stam.offset_bottom = -24
+	_time = _make_label(root, Control.PRESET_TOP_RIGHT, 16)
+	_time.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_time.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	_time.offset_left = -200
+	_time.offset_right = -14
+	_time.offset_top = 30
+	_time.offset_bottom = 54
 	_debug = _make_label(root, Control.PRESET_BOTTOM_RIGHT, 14)
 	_debug.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_debug.grow_horizontal = Control.GROW_DIRECTION_BEGIN
@@ -83,6 +91,7 @@ func _make_label(parent: Control, preset: int, size: int) -> Label:
 
 func _process(_d: float) -> void:
 	_fps.text = "%d FPS" % Engine.get_frames_per_second()
+	_time.text = ("ZAMAN: " + GameManager.time_state) if GameManager.time_state != "2026" else ""
 	var dbg := ""
 	if GameManager.debug_ai:
 		for e in get_tree().get_nodes_in_group("enemies"):

@@ -13,6 +13,8 @@ func has_save() -> bool:
 
 
 func save_game() -> bool:
+	if GameManager.save_blocked:
+		return false  # zaman geçişi sürüyor: yarım durum kaydedilmez
 	var data := {
 		"version": VERSION,
 		"game": GameManager.to_save_data(),

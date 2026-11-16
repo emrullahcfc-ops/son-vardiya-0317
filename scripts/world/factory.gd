@@ -10,6 +10,8 @@ const HUD_SCRIPT := preload("res://scripts/ui/hud.gd")
 
 var player: CharacterBody3D
 var doors: Array = []
+var environment: Environment
+var time_layers: TimeLayers
 var _mats: Dictionary = {}
 var _tp_index := -1
 var _ev_index := -1
@@ -44,7 +46,12 @@ func _ready() -> void:
 	var ch2 := Chapter2.new()
 	ch2.factory = self
 	add_child(ch2)
+	time_layers = TimeLayers.new()
+	time_layers.factory = self
+	add_child(time_layers)
 	_build_navigation()
+	time_layers.apply(GameManager.time_state)
+	time_layers.fix_player()
 	AudioManager.start_layer("hum", -30.0)
 	AudioManager.start_layer("wind", -34.0)
 	QuestManager.start_quest("ch1_enter_factory")
@@ -165,6 +172,7 @@ func _build_environment() -> void:
 	env.fog_enabled = true
 	env.fog_light_color = Color(0.06, 0.07, 0.09)
 	env.fog_density = 0.015
+	environment = env
 	var we := WorldEnvironment.new()
 	we.environment = env
 	add_child(we)

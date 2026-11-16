@@ -8,6 +8,7 @@ extends Interactable
 @export var consume_key: bool = false
 @export var required_flag: String = ""   # bayrak yoksa kilitli (ör. enerji + kod)
 @export var locked_hint: String = "Kilitli."
+@export var only_in_state: String = ""   # "2004"/"2026": yalnızca o zaman durumunda kullanılabilir
 @export var open_angle: float = 100.0
 @export var size: Vector3 = Vector3(1.0, 2.1, 0.1)
 
@@ -58,6 +59,9 @@ func _do_interact(player: Node) -> bool:
 		var name: String = InventoryManager.ITEMS.get(required_item, {}).get("name", "bir anahtar")
 		AudioManager.say("Kilitli. %s gerekiyor." % name, 2.5)
 		return false
+	if only_in_state != "" and GameManager.time_state != only_in_state:
+		AudioManager.say("Bu kapı şu anki zamanda kullanılamıyor.", 3.0)
+		return false
 	if required_flag != "" and not GameManager.has_flag(required_flag):
 		AudioManager.say(locked_hint, 3.0)
 		return false
@@ -75,6 +79,8 @@ func force_open() -> void:
 
 
 func _is_locked() -> bool:
+	if only_in_state != "" and GameManager.time_state != only_in_state:
+		return true
 	if required_item != "" and not InventoryManager.has_item(required_item):
 		return true
 	return required_flag != "" and not GameManager.has_flag(required_flag)

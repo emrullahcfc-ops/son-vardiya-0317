@@ -3,6 +3,7 @@ extends SceneTree
 ## 1) veri tutarlılığı  2) kapı geçiş testi (kapsül)  3) rampada yürüme (fizik)  4) alan ziyareti
 
 var failures: Array[String] = []
+var finished := false
 
 
 func _check(cond: bool, name: String) -> void:
@@ -36,6 +37,8 @@ func _initialize() -> void:
 	await process_frame
 	await _run()
 	print("")
+	if not finished:
+		failures.append("test sonuna ulaşılamadı (çalışma hatası)")
 	if failures.is_empty():
 		print("TÜM FABRİKA TESTLERİ GEÇTİ")
 		quit(0)
@@ -141,6 +144,7 @@ func _run() -> void:
 
 	Input.action_release("move_forward")
 	level.queue_free()
+	finished = true
 
 
 func _walk(pl: CharacterBody3D, start: Vector3, yaw: float, frames: int) -> void:

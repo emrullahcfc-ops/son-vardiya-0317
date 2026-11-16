@@ -21,6 +21,13 @@ godot --headless --path . --script tests/run_chapter4_tests.gd
 godot --headless --fixed-fps 60 --path . --script tests/run_enemy_tests.gd
 godot --headless --fixed-fps 60 --path . --script tests/run_sayici_tests.gd
 godot --headless --fixed-fps 60 --path . --script tests/run_chapter5_tests.gd
+godot --headless --fixed-fps 60 --path . --script tests/run_time_tests.gd
 ```
 
 Tasarım ve yol haritası: [docs/GAME_DESIGN.md](docs/GAME_DESIGN.md)
+
+## Ekran kartı notu
+Bazı bilgisayarlarda Vulkan/Direct3D 12 sürücüsü Godot'u çökertebilir (boş bir Godot projesi bile). Böyle bir durumda oyunu OpenGL uyumluluk moduyla açın:
+```
+godot --path . --rendering-driver opengl3 --rendering-method gl_compatibility
+```
