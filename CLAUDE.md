@@ -19,12 +19,15 @@ godot --headless --path . --import
 godot --headless --path . --script tests/run_tests.gd
 godot --headless --path . --script tests/run_factory_tests.gd
 godot --headless --path . --script tests/run_horror_tests.gd
+godot --headless --path . --script tests/run_chapter1_tests.gd
+godot --headless --path . --script tests/run_chapter2_tests.gd
 ```
 Godot: `Godot_v4.7.2-stable_win64_console.exe` (winget ile kurulu).
 
 ## Mimari
 - Autoload: GameManager, SaveManager, QuestManager, InventoryManager, AudioManager, HorrorDirector (`scripts/autoload/`).
 - Korku: `HorrorDirector` karar verir, `scripts/horror/horror_effects.gd` uygular; sesler `AudioManager`da sentezlenir.
+- Bölümler: `scripts/chapters/` (`ChapterBase` ortak yardımcılar, `Chapter1`, `Chapter2`). Kapı kilitleri `FactoryLayout.DOORS` içinde `req_item`/`req_flag`.
 - Oyuncu: `scenes/player/player.tscn`, `scripts/player/player.gd`.
 - Etkileşim: `Interactable` tabanı → `Door`, `Pickup`, `Document` (`scripts/interact/`).
 - Kayıt: `user://savegame.json` (+ `.bak`). F5 kaydet, F9 yükle (test sahnesinde).

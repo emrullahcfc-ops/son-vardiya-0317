@@ -1,12 +1,11 @@
 class_name Chapter1
-extends Node
+extends ChapterBase
 ## Bölüm 1: Giriş ve Güvenlik. Eşyaları, görevleri, telefon görüşmelerini ve geçişi kurar.
 ## Akış: dışarıda telefon → Giriş'te kulübe anahtarı → Güvenlik: ölçü aleti, pano (ölç + şalter),
 ## saat/defter ipucu → Giriş: tuş takımı (0317) → personel kapısı → 03.17 anonsu → Bölüm 2 + kayıt.
 
 const CODE := "0317"
 
-var factory: Node3D
 var ring_time := 2.2  # telefon çalma süresi (testte 0)
 
 
@@ -38,12 +37,6 @@ func _on_item(item_id: String) -> void:
 			QuestManager.start_quest("ch1_power_staff_door")
 		if not QuestManager.is_completed("ch1_find_door_code"):
 			QuestManager.start_quest("ch1_find_door_code")
-
-
-func _complete(quest_id: String) -> void:
-	if not QuestManager.is_active(quest_id) and not QuestManager.is_completed(quest_id):
-		QuestManager.start_quest(quest_id)
-	QuestManager.complete_quest(quest_id)
 
 
 func _intro() -> void:
@@ -129,71 +122,6 @@ var _twelfth: MeshInstance3D
 func _show_twelfth() -> void:
 	if _twelfth:
 		_twelfth.visible = true
-
-
-func _mat(c: Color, unshaded := false) -> StandardMaterial3D:
-	var m := StandardMaterial3D.new()
-	m.albedo_color = c
-	if unshaded:
-		m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	return m
-
-
-func _box(parent: Node, pos: Vector3, size: Vector3, c: Color, rot_y := 0.0) -> StaticBody3D:
-	var b := StaticBody3D.new()
-	b.collision_layer = 1
-	b.position = pos
-	b.rotation.y = rot_y
-	var mi := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = size
-	mi.mesh = bm
-	mi.material_override = _mat(c)
-	b.add_child(mi)
-	var cs := CollisionShape3D.new()
-	var bs := BoxShape3D.new()
-	bs.size = size
-	cs.shape = bs
-	b.add_child(cs)
-	parent.add_child(b)
-	return b
-
-
-func _spot(parent: Node, pos: Vector3, size: Vector3, c: Color, prompt: Callable, action: Callable) -> CallbackInteractable:
-	var it := CallbackInteractable.new()
-	it.position = pos
-	it.prompt_fn = prompt
-	it.action_fn = action
-	var mi := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = size
-	mi.mesh = bm
-	mi.material_override = _mat(c)
-	it.add_child(mi)
-	var cs := CollisionShape3D.new()
-	var bs := BoxShape3D.new()
-	bs.size = size + Vector3(0.15, 0.15, 0.15)
-	cs.shape = bs
-	it.add_child(cs)
-	parent.add_child(it)
-	return it
-
-
-func _pickup(pos: Vector3, item: String, pid: String) -> void:
-	var p := Pickup.new()
-	p.item_id = item
-	p.pickup_id = pid
-	p.position = pos
-	factory.add_child(p)
-
-
-func _doc(pos: Vector3, title: String, body: String, flag := "") -> void:
-	var d := Document.new()
-	d.title = title
-	d.body = body
-	d.flag_on_read = flag
-	d.position = pos
-	factory.add_child(d)
 
 
 func _build_props() -> void:

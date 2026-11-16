@@ -29,6 +29,9 @@ func _ready() -> void:
 	var ch1 := Chapter1.new()
 	ch1.factory = self
 	add_child(ch1)
+	var ch2 := Chapter2.new()
+	ch2.factory = self
+	add_child(ch2)
 	AudioManager.start_layer("hum", -30.0)
 	AudioManager.start_layer("wind", -34.0)
 	QuestManager.start_quest("ch1_enter_factory")

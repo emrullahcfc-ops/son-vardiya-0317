@@ -7,6 +7,10 @@ extends Interactable
 @export var power_flag: String = "ch1_power_on"
 @export var unlock_flag: String = "ch1_staff_unlocked"
 @export var quest_id: String = "ch1_find_door_code"
+@export var title_text: String = "Personel kapısı — 4 haneli kod"
+@export var ok_text: String = "Kod kabul edildi. Personel kapısının kilidi açıldı."
+
+signal unlocked
 
 var _layer: CanvasLayer
 var _edit: LineEdit
@@ -27,7 +31,7 @@ func try_code(entered: String) -> bool:
 	if GameManager.has_flag(unlock_flag):
 		AudioManager.say("Kilit zaten açık.", 1.5)
 		return true
-	if not GameManager.has_flag(power_flag):
+	if power_flag != "" and not GameManager.has_flag(power_flag):
 		AudioManager.play_sfx("error")
 		AudioManager.say("Panel enerjisiz. Önce elektriği aç.", 2.5)
 		return false
@@ -37,15 +41,16 @@ func try_code(entered: String) -> bool:
 		return false
 	GameManager.set_flag(unlock_flag)
 	AudioManager.play_sfx("beep")
-	AudioManager.say("Kod kabul edildi. Personel kapısının kilidi açıldı.", 3.0)
+	AudioManager.say(ok_text, 3.0)
 	if not QuestManager.is_active(quest_id):
 		QuestManager.start_quest(quest_id)
 	QuestManager.complete_quest(quest_id)
+	unlocked.emit()
 	return true
 
 
 func _do_interact(_player: Node) -> bool:
-	if GameManager.has_flag(unlock_flag) or not GameManager.has_flag(power_flag):
+	if GameManager.has_flag(unlock_flag) or (power_flag != "" and not GameManager.has_flag(power_flag)):
 		try_code("")
 		return false
 	_open_ui()
@@ -61,10 +66,10 @@ func _open_ui() -> void:
 	var box := VBoxContainer.new()
 	panel.add_child(box)
 	var title := Label.new()
-	title.text = "Personel kapısı — 4 haneli kod"
+	title.text = title_text
 	box.add_child(title)
 	_edit = LineEdit.new()
-	_edit.max_length = 4
+	_edit.max_length = code.length()
 	_edit.placeholder_text = "____"
 	_edit.text_submitted.connect(_submit)
 	box.add_child(_edit)

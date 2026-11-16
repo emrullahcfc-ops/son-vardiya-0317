@@ -2,12 +2,11 @@ extends Node
 ## Gerçek oyun içi ekran görüntüsü alır: godot --path . res://tools/capture.tscn
 # [dosya, oda, durus_x, durus_z, bakis_x, bakis_z, (olay)]  — dünya koordinatları (metre)
 const SHOTS := [
-	["b1_01_arac_yagmur", "g_out", -2.0, 22.5, 4.0, 20.5],
-	["b1_02_giris_masa_pano", "g_entry", 0.0, 9.3, 1.0, 15.0],
-	["b1_03_tus_takimi", "g_entry", 1.4, 11.5, 1.4, 8.28],
-	["b1_04_guvenlik", "g_guard", -10.0, 9.5, -10.5, 14.8],
-	["b1_05_pano_12_siluet", "g_entry", -3.5, 11.5, -3.5, 15.7, "ch1_photo"],
-	["b1_06_sigorta_panosu", "g_guard", -10.0, 12.0, -13.7, 12.0],
+	["b2_01_hat_b_makine", "g_lineB", -3.0, 0.0, 2.5, 4.0],
+	["b2_02_cizelge", "g_lineB", -3.0, 0.5, -3.0, -3.7],
+	["b2_03_hat_a_dilekce", "g_lineA", -9.0, 1.5, -13.2, -2.2],
+	["b2_04_makineler_calisiyor", "g_lineB", -3.0, 0.0, 2.5, 4.0, "ch2_run"],
+	["b2_05_bakim_dolap", "g_maint", 0.0, -7.0, -5.3, -8.0],
 ]
 func _ready() -> void:
 	var level: Node = load("res://scenes/world/factory.tscn").instantiate()
@@ -21,6 +20,12 @@ func _ready() -> void:
 		if s.size() > 6 and s[6] == "ch1_photo":
 			GameManager.set_flag("ch1_power_on")
 			level.find_children("*", "Chapter1", false, false)[0].photo_board()
+		elif s.size() > 6 and s[6] == "ch2_run":
+			GameManager.set_chapter(2)
+			var c2: Node = level.find_children("*", "Chapter2", false, false)[0]
+			c2._wait = false
+			for l in ["B", "C", "A"]:
+				c2.press_line(l)
 		elif s.size() > 6:
 			HorrorDirector.force_fire(s[6])
 		for _i in 20: await get_tree().process_frame

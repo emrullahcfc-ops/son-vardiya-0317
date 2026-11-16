@@ -37,7 +37,8 @@ A (6+ işçi, kayıtlar, yedek) · B (delil yetersiz, kaçış) · C (defteri im
 | 05 | Fabrika blokları (19 alan, 3 kat) | ✅ otomatik testlerle doğrulandı; elle oynama testi bekliyor |
 | 06 | Atmosfer, ses, korku olayları | ✅ otomatik testlerle doğrulandı; kulakla/gözle deneme bekliyor |
 | 07 | Bölüm 1: Giriş ve Güvenlik | ✅ otomatik testlerle doğrulandı; baştan sona elle oynama bekliyor |
-| 08+ | Bölümler 2–8, düşmanlar, finaller, cila, build | ⏳ |
+| 08 | Bölüm 2: Üretim Hattı | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
+| 09+ | Taklitçi düşman, Bölümler 3–8, finaller, cila, build | ⏳ |
 
 ## Ürün riskleri
 - Sanat ve ses üretimi: tüm modeller şu an geçici; Steam için sanatçı/varlık paketi gerekir.
@@ -67,3 +68,11 @@ Akış: yağmurlu dış alan + araç → Hakan telefonu (zil + altyazı) → Gir
 - **Softlock yok:** tüm eşyalar kilitsiz bölgelerde; yanlış kod serbestçe tekrar denenir; anahtar/ölçü aleti kritik eşyadır, kaybolmaz.
 - **Kilit verisi:** `FactoryLayout.DOORS` içinde `req_item` (eşya) ve `req_flag` (bayrak) anahtarları.
 - Bilinen eksik: turnike şimdilik dekor (etkileşimsiz); gerçek ses/ses oyunculuğu yok.
+
+## Bölüm 2: Üretim Hattı (Aşama 8)
+Kod: `scripts/chapters/chapter2.gd` (ortak yardımcılar: `chapter_base.gd`).
+- **Faz sırası (B → C → A):** her hattın yanında kırmızı başlat düğmesi var. Doğru sırada hat yeşil yanar; yanlış sırada hepsi sıfırlanır ve tekrar denenir. Sırayı B Hattı'ndaki **vardiya çizelgesi** verir ("2. hat, 3. hat, 1. hat"; 1=A, 2=B, 3=C).
+- **Dolap kodu 317 (tahmin değil, belgeyle):** A Hattı'ndaki **dilekçe** duruş sırasını (A, B, C) ve sayaçları söyler; Bakım'daki **bakım iptal formu** kuralı verir: "hat sayısı, ardından en son duran hattın sayacı". Makine plakaları sayaçları gösterir (A 04, B 11, C 17). Hat sayısı 3 + son duran C'nin sayacı 17 = **317**.
+- **Final:** üç hat eşzamanlı çalışır (makine sesi, ışık nefesi, anons); bakım kapısının kilidi düşer. Dolaptan **kat anahtarı** alınır, bölüm biter ve kayıt alınır; merdiven kapısı artık açılır (kat anahtarı ister).
+- Kilit verisi: `FactoryLayout.DOORS` `req_flag` (bakım kapısı: `ch2_machines_on`) ve `req_item` (merdiven: `floor_key`).
+- Not: Bölüm 3'e (Personel Katı) geçiş Aşama 10'da; şimdilik `ch2_done` bayrağı ve kayıt var.

@@ -9,6 +9,9 @@ const QUESTS := {
 	"ch1_booth_key": {"title": "Güvenlik kulübesinin anahtarını bul", "main": true},
 	"ch1_power_staff_door": {"title": "Personel kapısının enerjisini aç", "main": true},
 	"ch1_find_door_code": {"title": "Kapı kodunu bul", "main": false},
+	"ch2_start_lines": {"title": "Üç hattı sırayla çalıştır", "main": true},
+	"ch2_cabinet_code": {"title": "Bakım dolabının kodunu bul", "main": true},
+	"ch2_floor_key": {"title": "Kat anahtarını al", "main": true},
 }
 
 var _active: Array[String] = []

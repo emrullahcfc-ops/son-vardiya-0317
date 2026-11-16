@@ -189,6 +189,14 @@ func _synth(sound: String) -> AudioStreamWAV:
 				lp3 += (x - lp3) * 0.3
 				var fade := minf(1.0, minf(float(i), float(n - i)) / (RATE * 0.1))
 				d[i] = (x - lp3) * 0.5 * fade
+		"machine":
+			loop = true
+			n = RATE * 2
+			d.resize(n)
+			for i in n:
+				var t := float(i) / RATE
+				var pulse := 0.55 + 0.45 * sin(TAU * 4.0 * t)
+				d[i] = (sin(TAU * 60.0 * t) * 0.5 + sin(TAU * 120.0 * t) * 0.3 + rng.randf_range(-0.1, 0.1)) * pulse * 0.7
 		"hum":
 			loop = true
 			n = RATE * 3
