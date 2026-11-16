@@ -11,6 +11,7 @@ var ITEMS: Dictionary = {
 	"worker_id_ayse": {"name": "Ayşe'nin kimliği", "critical": true, "desc": "11 işçiden biri."},
 	"multimeter": {"name": "Ölçü aleti", "critical": true, "desc": "Gerilim ölçer."},
 	"gas_meter": {"name": "Gaz ölçer", "critical": true, "desc": "Havadaki gaz seviyesini gösterir."},
+	"breaker_handle": {"name": "Şalter kolu", "critical": true, "desc": "Ana şalter panosuna takılır."},
 	"usb_drive": {"name": "USB bellek", "critical": true, "desc": "Delilleri kopyalamak için."},
 	"yusuf_card": {"name": "Yusuf'un personel kartı", "critical": true, "desc": "Babanın eski fabrika kartı."},
 }

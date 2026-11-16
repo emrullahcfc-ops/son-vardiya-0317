@@ -2,10 +2,9 @@ extends Node
 ## Gerçek oyun içi ekran görüntüsü alır: godot --path . res://tools/capture.tscn
 # [dosya, oda, durus_x, durus_z, bakis_x, bakis_z, (olay)]  — dünya koordinatları (metre)
 const SHOTS := [
-	["t_01_hatB_2026", "g_lineB", 5.0, -1.5, -1.0, 5.0],
-	["t_02_hatB_2004", "g_lineB", 5.0, -1.5, -1.0, 5.0, "time_2004"],
-	["t_03_hatC_2026", "g_lineC", 9.0, -2.0, 13.5, 3.0],
-	["t_04_hatC_2004", "g_lineC", 9.0, -2.0, 13.5, 3.0, "time_2004"],
+	["c6_01_beton_2026", "g_load", 9.0, 12.0, 13.4, 12.0, "ch6_state"],
+	["c6_02_depo_2004_terminal", "g_load", 9.0, 12.0, 14.9, 12.0, "ch6_2004"],
+	["c6_03_koridor_iscileri", "g_load", 9.0, 12.0, 14.9, 12.0, "ch6_corridor"],
 ]
 func _ready() -> void:
 	var level: Node = load("res://scenes/world/factory.tscn").instantiate()
@@ -19,6 +18,18 @@ func _ready() -> void:
 		if s.size() > 6 and s[6] == "ch1_photo":
 			GameManager.set_flag("ch1_power_on")
 			level.find_children("*", "Chapter1", false, false)[0].photo_board()
+		elif s.size() > 6 and (s[6] == "ch6_state" or s[6] == "ch6_2004" or s[6] == "ch6_corridor"):
+			GameManager.set_chapter(6)
+			for f in ["ch4_done", "ch5_done"]:
+				GameManager.set_flag(f)
+			var c8: Node = level.find_children("*", "Chapter6", false, false)[0]
+			c8.chase_wait = false
+			level.time_layers.instant = true
+			if s[6] == "ch6_2004":
+				level.time_layers.switch_to("2004")
+			elif s[6] == "ch6_corridor":
+				InventoryManager.add_item("breaker_handle")
+				c8.use_breaker_panel()
 		elif s.size() > 6 and s[6] == "time_2004":
 			level.time_layers.instant = true
 			level.time_layers.switch_to("2004")

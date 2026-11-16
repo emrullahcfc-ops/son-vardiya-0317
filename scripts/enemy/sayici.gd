@@ -32,6 +32,7 @@ var suspicion := 0.0
 var last_known := Vector3.ZERO
 var route: Array[Vector3] = []
 var hide_check_chance := 0.5   # aramada dolabı kontrol etme olasılığı
+var chase_speed := SPEED_CHASE   # senaryolar yavaşlatabilir (ör. uzayan koridor)
 var hold_time := 0.0           # >0: pusuda bekler (ses taklidi)
 var sees_now := false
 
@@ -237,7 +238,7 @@ func _chase(delta: float) -> float:
 		attack_started.emit()
 		AudioManager.play_sfx("thump", global_position)
 		return 0.0
-	return SPEED_CHASE
+	return chase_speed
 
 
 ## Saldırı: kısa uyarı süresi var. Bu sürede oyuncu uzaklaşırsa saldırı boşa gider (adil kaçış penceresi).

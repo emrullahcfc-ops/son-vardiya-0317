@@ -122,12 +122,12 @@ func _run() -> void:
 	print("Ortak geometri, ayrı katmanlar")
 	var walls_before := 0
 	for c in level.get_children():
-		if c is StaticBody3D and not ("door_id" in c) and c.collision_layer == 1 and not String(c.name).begins_with("Rubble"):
+		if c is StaticBody3D and not ("door_id" in c) and c.collision_layer == 1 and not c.has_meta("time_state"):
 			walls_before += 1
 	tl.apply("2004")
 	var walls_after := 0
 	for c in level.get_children():
-		if c is StaticBody3D and not ("door_id" in c) and c.collision_layer == 1 and not String(c.name).begins_with("Rubble"):
+		if c is StaticBody3D and not ("door_id" in c) and c.collision_layer == 1 and not c.has_meta("time_state"):
 			walls_after += 1
 	_check(walls_before == walls_after and walls_before > 50, "duvar/zemin/tavan geometrisi iki durumda aynı (%d gövde)" % walls_before)
 	_check(not _rubble().visible and _rubble().collision_layer == 0, "2004: 2026'ya özel moloz yok (görünmez, çarpışmasız)")

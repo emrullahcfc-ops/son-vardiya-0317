@@ -19,6 +19,10 @@ const QUESTS := {
 	"ch4_basement": {"title": "Bodruma in: kontrol odasındaki mühür panosunu bul", "main": true},
 	"ch5_fans": {"title": "Fanları doğru sırayla çalıştır", "main": true},
 	"ch5_seal": {"title": "Mühür panosuna Yusuf'un kartını okut", "main": true},
+	"ch6_alcove": {"title": "Betonla örülü depoya ulaş: kartla 2004'e geç", "main": true},
+	"ch6_locker": {"title": "2026'da vardiya dolabını aç (kodu 2004'ten al)", "main": true},
+	"ch6_breaker": {"title": "2004'te bakım odasındaki şalter panosuna kolu tak", "main": true},
+	"ch6_corridor": {"title": "Uzayan koridordan kaç ve şalteri indir", "main": true},
 	"ch2_floor_key": {"title": "Kat anahtarını al", "main": true},
 }
 

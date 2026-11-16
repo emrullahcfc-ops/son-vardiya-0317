@@ -31,9 +31,15 @@ func _ready() -> void:
 	var ch1 := Chapter1.new()
 	ch1.factory = self
 	add_child(ch1)
+	time_layers = TimeLayers.new()   # bölüm betiklerinden ÖNCE: katman kaydı için
+	time_layers.factory = self
+	add_child(time_layers)
 	var sc := SayiciController.new()
 	sc.factory = self
 	add_child(sc)
+	var ch6 := Chapter6.new()
+	ch6.factory = self
+	add_child(ch6)
 	var ch5 := Chapter5.new()
 	ch5.factory = self
 	add_child(ch5)
@@ -46,9 +52,6 @@ func _ready() -> void:
 	var ch2 := Chapter2.new()
 	ch2.factory = self
 	add_child(ch2)
-	time_layers = TimeLayers.new()
-	time_layers.factory = self
-	add_child(time_layers)
 	_build_navigation()
 	time_layers.apply(GameManager.time_state)
 	time_layers.fix_player()

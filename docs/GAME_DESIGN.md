@@ -44,7 +44,8 @@ A (6+ işçi, kayıtlar, yedek) · B (delil yetersiz, kaçış) · C (defteri im
 | 12 | Sayıcı AI ve saklanma | ✅ otomatik testlerle doğrulandı; elle oynama ve denge ayarı bekliyor |
 | 13 | Bölüm 5: Gaz ve havalandırma | ✅ otomatik testlerle doğrulandı; elle oynama ve denge ayarı bekliyor |
 | 14 | İki zaman durumu altyapısı (2026/2004) | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
-| 15+ | Bölümler 6–8, finaller, cila, build | ⏳ |
+| 15 | Bölüm 6: 03.17 Vardiyası | ✅ otomatik testlerle doğrulandı; elle oynama bekliyor |
+| 16+ | Bölümler 7–8, finaller, cila, build | ⏳ |
 
 ## Ürün riskleri
 - Sanat ve ses üretimi: tüm modeller şu an geçici; Steam için sanatçı/varlık paketi gerekir.
@@ -145,3 +146,15 @@ Kod: `scripts/world/time_layers.gd` (TimeLayers), `scripts/interact/card_reader.
 - **Güvenlik:** geçişte ekran kararır, durum değişir, oyuncu yeni katmanın engelinin içindeyse en yakın boş ve zeminli konuma taşınır (halka araması; yedek: son güvenli konum). Yüklemede kontrol noktası engel içindeyse de aynı düzeltme uygulanır. Geçiş sürerken kayıt kilitlidir (yarım durum yazılmaz).
 - **Kayıt:** zaman durumu kayda yazılır; yeni sahne kayıtlı durumun katmanlarıyla açılır.
 - **Bilinen sınırlar:** dünyada şimdilik yalnızca örnek katman içeriği var (moloz, 3 işçi, ışık); Bölüm 6–7 kendi 2004/2026 içeriğini bu sisteme kaydeder. Navigasyon ağı 2026 hâliyle üretilir (2004'te moloz yeri düşmanlar için kapalı kalır; zararsız).
+
+## Bölüm 6: 03.17 Vardiyası (Aşama 15)
+Kod: `scripts/chapters/chapter6.gd`, `scripts/ui/choice_ui.gd`; zaman altyapısı `time_layers.gd` (Aşama 14). Bölüm 5 bitince (mühür onayı) başlar; "[Anons] 03.17" ile B Hattı'ndaki kart okuyucu çalışır.
+- **Bulmaca 1 (beton + 2004):** 2026'da Yükleme deposunun doğu ucu betonla örülü (kapsül geçemez). 2004'te beton yok; kart okuyucuyla 2004'e geçip depoya girilir. Duvardaki not 2004'e yönlendirir.
+- **Bulmaca 2 (kod 041117):** 2004 deposundaki **vardiya terminali** "kapanış kayıt no 04-11-17 → 041117" gösterir (yalnızca 2004'te). 2026'da C Hattı'ndaki **vardiya dolabı** 6 haneli kod ister; etiket "şifre = depo kapanış kayıt numarası (altı hane), kayıt terminalinde" der. Yanlış kodda sınırsız tekrar. Açılınca **şalter kolu** (kritik eşya).
+- **Bulmaca 3 (şalter panosu):** bakım odasındaki ana pano yalnızca 2004'te vardır; kol yoksa net mesaj. Kolla zaman bozulur (kontrol noktası alınır).
+- **2004 atmosferi:** 2004'te üç makine de çalışır (parlar), makine sesi çalar, işçi siluetleri görünür; ışık sıcak.
+- **11 işçi koridoru ve uzayan koridor kaçışı:** fabrika dışında 2004'e özel bir koridor. İki yanda 11 işçi oyuncuya döner. Oyuncuyu Sayıcı kovalar (hızı 2,8 m/sn: yürümeden yavaş; durmadan ilerleyen yakalanmaz, duran yakalanır). Eşiği geçen oyuncu ve Sayıcı bir periyot geri alınır: koridor 3 kez "uzar", sonra sona gidilir.
+- **Yusuf telefonu:** koridor sonunda çalar; **iki seçenek** (anlatacağım / kimseye söylemeyeceğim). Seçim bir kez yapılır ve `ch6_choice` + `final_choice` bayraklarına yazılır (finale taşınır); ikinci cevap reddedilir, önceki bayraklar/envanter/ziyaretler değişmez.
+- **Şalter sahnesi:** cevap verdikten sonra şalter indirilir; zaman durur, oyuncu bakım odasına 2026'da döner, Bölüm 7'ye geçilir ve kayıt alınır.
+- **Ölüm/tekrar:** koridorda yakalanınca bakım odasındaki kontrol noktasına dönülür (kol kaybolmaz, zaman durumu tutarlı); panoya kol takılarak yeniden denenir.
+- **Sınırlar:** Sayıcı dönüşten sonra fabrikada yine devriyeye çıkar (Bölüm 7'de de sürer); seçim penceresi ve koridor görseli sade; ses oyunculuğu yok.
