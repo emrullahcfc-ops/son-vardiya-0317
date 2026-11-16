@@ -35,8 +35,11 @@ func _ready() -> void:
 	_fps = _make_label(root, Control.PRESET_TOP_RIGHT, 14)
 	_fps.position = Vector2(-90, 8)
 
-	_area = _make_label(root, Control.PRESET_CENTER_TOP, 18)
+	_area = _make_label(root, Control.PRESET_TOP_WIDE, 18)
 	_area.position.y = 10
+	_quest.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_quest.grow_horizontal = Control.GROW_DIRECTION_END
+	_quest.position = Vector2(16, 48)
 	GameManager.area_entered.connect(_on_area)
 	AudioManager.subtitle.connect(_on_subtitle)
 	QuestManager.quest_started.connect(func(_i): _refresh_quest())
@@ -55,7 +58,7 @@ func _make_label(parent: Control, preset: int, size: int) -> Label:
 	l.add_theme_constant_override("outline_size", 6)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	parent.add_child(l)
-	l.set_anchors_preset(preset)
+	l.set_anchors_and_offsets_preset(preset)
 	l.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	return l
 

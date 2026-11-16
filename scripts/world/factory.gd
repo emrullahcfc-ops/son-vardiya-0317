@@ -64,11 +64,11 @@ func _build_environment() -> void:
 	env.background_mode = Environment.BG_COLOR
 	env.background_color = Color(0.01, 0.012, 0.02)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.2, 0.22, 0.28)
-	env.ambient_light_energy = 0.35
+	env.ambient_light_color = Color(0.3, 0.33, 0.4)
+	env.ambient_light_energy = 0.8
 	env.fog_enabled = true
-	env.fog_light_color = Color(0.04, 0.05, 0.07)
-	env.fog_density = 0.03
+	env.fog_light_color = Color(0.06, 0.07, 0.09)
+	env.fog_density = 0.015
 	var we := WorldEnvironment.new()
 	we.environment = env
 	add_child(we)
@@ -249,7 +249,7 @@ func _add_light(room: Dictionary) -> void:
 	var l := OmniLight3D.new()
 	l.position = c + Vector3(0, 2.9, 0)
 	l.omni_range = maxf(b[2] - b[0], b[3] - b[1]) * 0.85
-	l.light_energy = 0.9
+	l.light_energy = 2.2
 	l.light_color = Color(0.85, 0.9, 1.0) if room["f"] != "B" else Color(0.7, 0.85, 0.75)
 	add_child(l)
 
